@@ -1,0 +1,70 @@
+2024-01-25 01:19:40,348 - INFO: token eyJhbGciOi is valid
+2024-01-25 01:19:40,349 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,351 - INFO: SELECT restaurant.id 
+FROM restaurant 
+WHERE restaurant.hashf = ?
+2024-01-25 01:19:40,351 - INFO: [generated in 0.00018s] ('3005e7b00dcfa3c923e6008134051748f2e674827d296c93af601de4b493ed3f',)
+2024-01-25 01:19:40,352 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,353 - INFO: SELECT tables.id, tables.menu_link, tables.qr, tables.table_number, tables.restaurant_id 
+FROM tables 
+WHERE tables.restaurant_id = ?
+2024-01-25 01:19:40,353 - INFO: [generated in 0.00021s] (1,)
+2024-01-25 01:19:40,354 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,354 - INFO: [generated in 0.00017s] (1,)
+2024-01-25 01:19:40,355 - INFO: COMMIT
+2024-01-25 01:19:40,362 - INFO: delete data in tables
+2024-01-25 01:19:40,362 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,362 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,362 - INFO: [cached since 0.008044s ago] (2,)
+2024-01-25 01:19:40,363 - INFO: COMMIT
+2024-01-25 01:19:40,364 - INFO: delete data in tables
+2024-01-25 01:19:40,364 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,364 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,365 - INFO: [cached since 0.01031s ago] (3,)
+2024-01-25 01:19:40,365 - INFO: COMMIT
+2024-01-25 01:19:40,366 - INFO: delete data in tables
+2024-01-25 01:19:40,367 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,367 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,367 - INFO: [cached since 0.01256s ago] (4,)
+2024-01-25 01:19:40,367 - INFO: COMMIT
+2024-01-25 01:19:40,369 - INFO: delete data in tables
+2024-01-25 01:19:40,369 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,370 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,370 - INFO: [cached since 0.01556s ago] (5,)
+2024-01-25 01:19:40,370 - INFO: COMMIT
+2024-01-25 01:19:40,372 - INFO: delete data in tables
+2024-01-25 01:19:40,372 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,372 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,373 - INFO: [cached since 0.0183s ago] (6,)
+2024-01-25 01:19:40,373 - INFO: COMMIT
+2024-01-25 01:19:40,374 - INFO: delete data in tables
+2024-01-25 01:19:40,375 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,375 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,375 - INFO: [cached since 0.02092s ago] (8,)
+2024-01-25 01:19:40,376 - INFO: COMMIT
+2024-01-25 01:19:40,377 - INFO: delete data in tables
+2024-01-25 01:19:40,377 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,377 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,378 - INFO: [cached since 0.02334s ago] (9,)
+2024-01-25 01:19:40,378 - INFO: COMMIT
+2024-01-25 01:19:40,379 - INFO: delete data in tables
+2024-01-25 01:19:40,380 - INFO: BEGIN (implicit)
+2024-01-25 01:19:40,380 - INFO: DELETE FROM tables WHERE tables.id = ?
+2024-01-25 01:19:40,380 - INFO: [cached since 0.02549s ago] (10,)
+2024-01-25 01:19:40,380 - INFO: COMMIT
+2024-01-25 01:19:40,381 - INFO: delete data in tables
+2024-01-25 01:22:46,426 - ERROR: Token eyJhbGciOi is invalid. Check your SCERET or KEY
+2024-01-25 01:22:46,426 - ERROR: JWT eyJhbGciOi відсутній в JWTMetaData
+2024-01-25 01:24:47,847 - INFO: token eyJhbGciOi is valid
+2024-01-25 01:24:47,848 - INFO: UPDATE restaurant SET  WHERE restaurant.hashf = ?
+2024-01-25 01:24:47,848 - INFO: [generated in 0.00020s] ('3005e7b00dcfa3c923e6008134051748f2e674827d296c93af601de4b493ed3f',)
+2024-01-25 01:24:47,848 - ERROR: Помилка при оновленні даннних закладу
+
+Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6InZhbGVyYS5kY2huQGdtYWlsLmNvbSIsImV4cCI6MTcwNjIwNzExN30.6fzZidgth1oGmLxv1ojmN1Zo0yBozPfmlsiLYJNLI84
+
+hashf: 3005e7b00dcfa3c923e6008134051748f2e674827d296c93af601de4b493ed3f
+
+ Error: (sqlite3.OperationalError) near "WHERE": syntax error
+[SQL: UPDATE restaurant SET  WHERE restaurant.hashf = ?]
+[parameters: ('3005e7b00dcfa3c923e6008134051748f2e674827d296c93af601de4b493ed3f',)]
+(Background on this error at: https://sqlalche.me/e/20/e3q8)

@@ -1,9 +1,14 @@
-import base64
+import hashlib
+from ...settings import logger
 
 
 class trash:
-    """Цей класс для методів які не грають
-    головну роль в цьому додатку"""
+    """Цей обьект для мусорних методів в цьому додатку"""
 
     def get_hash(self, string: str) -> str:
-        return base64.b64encode(string).decode()
+        h = hashlib.sha256(string.encode()).hexdigest()
+        logger.info(f"{h[:10]} hash created")
+        return h
+    
+    def parse_user_data(self, data: dict) -> dict:
+        return {k: v for k, v in data.items() if k not in ['password', 'hashf', 'token'] and v is not None}

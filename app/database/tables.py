@@ -23,10 +23,11 @@ restaurant = Table(
                    unique=True, nullable=False),
     Column('name', String, nullable=False),
     Column('address', String, nullable=False),
-    Column('start_day', VARCHAR, nullable=True),
-    Column('end_day', VARCHAR, nullable=True),
-    Column('start_time', DateTime, nullable=True),
-    Column('end_time', DateTime, nullable=True) 
+    Column('start_day', VARCHAR(30), nullable=True),
+    Column('end_day', VARCHAR(30), nullable=True),
+    Column('start_time', VARCHAR(30), nullable=True),
+    Column('end_time', VARCHAR(30), nullable=True), 
+    Column('logo', String, nullable=True) 
 )
 
 categories = Table(
@@ -82,7 +83,8 @@ tables = Table(
 
     Column('id', Integer, primary_key=True),
     Column('menu_link', VARCHAR),
-    Column('qr', BLOB),
+    Column('qr', String),
+    Column('table_number', Integer),
     Column('restaurant_id', Integer,
            ForeignKey('restaurant.id', ondelete='CASCADE'))
 )

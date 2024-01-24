@@ -5,6 +5,8 @@ from sqlalchemy import (insert, select,
 from .. import engine
 from ..__models__ import tables_names
 
+from ...settings import logger
+
 
 class DB:
 
@@ -13,6 +15,7 @@ class DB:
 
 
     def err(self, msg) -> ValueError:
+        logger.error(f'{msg} is not instance of sqlalchemy.sql.schema.Table')
         raise ValueError(f'{msg} is not instance of sqlalchemy.sql.schema.Table')
 
 
@@ -31,10 +34,11 @@ class DB:
         if self._check_obj_instance(instance):
             query = insert(instance).values(**kwargs)
             self.cursor().execute(query).connection.commit()
+            
+            logger.info(f'insert {kwargs.keys()} into {instance}')
+            query = text(''.join([f'{instance.name}.{k} == "{v}" AND ' for k, v in kwargs.items() if v])[:-5])
 
-            query = text(''.join([f'{instance.name}.{k} == "{v}" AND ' for k, v in kwargs.items()])[:-5])
-
-            return self.get_where(instance, exp=query)
+            return self.get_where(instance, exp=query, all_=False)
         else:
             self.err(instance)
 
@@ -51,13 +55,17 @@ class DB:
 
 
     def get_where(self, instance: object, 
-                  and__ = None, exp = None):
-            if and__:
-                query = select(instance).where(and_(*and__))
-            else:
-                query = select(instance).where(exp)
+                  and__ = None, exp = None, 
+                  all_: bool = True):
+        if and__:
+            query = select(instance).where(and_(*and__))
+        else:
+            query = select(instance).where(exp)
 
-            return self.cursor().execute(query).fetchall()
+        ex = self.cursor().execute(query)
+        if all_:
+            return ex.all()
+        else: return ex.fetchone()
 
 
     def update_data(self, instance: object,
@@ -71,7 +79,8 @@ class DB:
             changes = self.cursor().execute(query)
             changes.connection.commit()
 
-            return self.get_where(instance, and__, exp)
+            logger.info(f"update {kwargs.keys()} in {instance}")
+            return self.get_where(instance, and__, exp, all_=False)
         else:
             self.err(instance)
 
@@ -85,6 +94,7 @@ class DB:
                 query = delete(instance).where(exp)
 
             self.cursor().execute(query).connection.commit()
+            logger.info(f"delete data in {instance}")
 
         else:
             self.err(instance)
