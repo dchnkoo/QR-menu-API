@@ -1,4 +1,4 @@
-from . import tables
+from ... import tables
 import sqlalchemy
 
 # Отримуємо список таблиць в базі данних

@@ -7,7 +7,7 @@ BASE_DIR = Path(__file__).parent.parent
 DATABASE = "sqlite:///" + str(BASE_DIR) + "/db.sqlite3"
 
 
-# DOMAIN
+# DOMAIN - USE FOR QR-codes GENERATE
 DOMAIN = "http://127.0.0.1:8000"
 
 
@@ -22,3 +22,9 @@ logger = logging # don't rename variable
 
 logger.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(message)s',
                    filename=BASE_DIR / 'app.log', filemode='w')
+
+
+# ADMIN
+
+    # Tables per page
+TABLES_PER_PAGE = 10

@@ -17,3 +17,4 @@ class DeleteTable(BaseModel):
     token: str
     data: Union[DelDataValidationB, 
                 DelDataValidationA]
+    

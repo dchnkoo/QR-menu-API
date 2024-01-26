@@ -1,9 +1,9 @@
-from ....database.db.db_model import DB
+from ....database.db.models.db_model import DB
 from io import BytesIO
 import threading
 
-from ....settings import DOMAIN
-from ....database.tables import tables, restaurant
+from ....settings import DOMAIN, TABLES_PER_PAGE, logger
+from ....database.tables import tables
 
 import base64
 import qrcode
@@ -45,14 +45,29 @@ class QR:
     def delete_all(self, restaurant_id: int) -> None:
         db = DB()
 
-        data = db.get_where(tables, exp=tables.c.restaurant_id == restaurant_id)
-
-        for i in range(len(data)):
-            db.delete_data(tables, exp=tables.c.id == data[i][0])
+        try: db.delete_data(tables, exp=tables.c.restaurant_id == restaurant_id)
+        except Exception as e:
+            logger.error(f"Помилка під час видалення данних про столи\n\nError: {e}")
 
     def delete_table(self, restaurant_id: int, table_number: int) -> None:
         db = DB()
 
-        db.delete_data(tables, and__=(tables.c.restaurant_id == restaurant_id,
+        try: db.delete_data(tables, and__=(tables.c.restaurant_id == restaurant_id,
                                       tables.c.table_number == table_number))
-        
+        except Exception as e:
+            logger.error(f"Помилка під час видалення данних про столи\n\nError: {e}")
+
+    def get_tables(self, restaurant_id: int, page: int = 1) -> list[dict]:
+        db = DB()
+
+        offset = (page - 1) * TABLES_PER_PAGE
+
+        try: data, total = db.get_where(tables, exp=tables.c.restaurant_id == restaurant_id,
+                     count=True, offset=offset, limit=TABLES_PER_PAGE, to_dict=True)
+        except Exception as e:
+            logger.error(f"Помилка під час отримання данних про столи\n\nError: {e}")
+            return {"status": 500, "msg": "Невідома помилка під час обробки запиту"}
+
+
+        total_pages = (total + TABLES_PER_PAGE - 1) // TABLES_PER_PAGE
+        return {"data": data, 'total_pages': total_pages, 'page': page}

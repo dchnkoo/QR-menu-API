@@ -12,3 +12,4 @@ class trash:
     
     def parse_user_data(self, data: dict) -> dict:
         return {k: v for k, v in data.items() if k not in ['password', 'hashf', 'token'] and v is not None}
+    

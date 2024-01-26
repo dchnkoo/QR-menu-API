@@ -1,8 +1,8 @@
-"""create tables
+"""empty message
 
-Revision ID: 18736e18a34a
+Revision ID: 46fab9df6802
 Revises: 
-Create Date: 2024-01-24 22:33:25.206718
+Create Date: 2024-01-27 00:31:02.240511
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = '18736e18a34a'
+revision: str = '46fab9df6802'
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -43,10 +43,9 @@ def upgrade() -> None:
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('hashf')
     )
-    op.create_table('categoryies',
+    op.create_table('categories',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('category', sa.VARCHAR(), nullable=False),
-    sa.Column('url', sa.VARCHAR(), nullable=True),
     sa.Column('color', sa.VARCHAR(), nullable=True),
     sa.Column('restaurant_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ondelete='CASCADE'),
@@ -63,21 +62,20 @@ def upgrade() -> None:
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('menu_link', sa.VARCHAR(), nullable=True),
     sa.Column('qr', sa.String(), nullable=True),
-    sa.Column('table', sa.Integer(), nullable=True),
+    sa.Column('table_number', sa.Integer(), nullable=True),
     sa.Column('restaurant_id', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['restaurant_id'], ['restaurant.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('dishes',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('img', sa.BLOB(), nullable=True),
+    sa.Column('img', sa.String(), nullable=True),
     sa.Column('name', sa.VARCHAR(), nullable=False),
-    sa.Column('url', sa.VARCHAR(), nullable=True),
     sa.Column('price', sa.Integer(), nullable=True),
     sa.Column('weight', sa.Integer(), nullable=True),
     sa.Column('comment', sa.VARCHAR(), nullable=True),
     sa.Column('category_id', sa.Integer(), nullable=True),
-    sa.ForeignKeyConstraint(['category_id'], ['categoryies.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['category_id'], ['categories.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('dishIngredient',
@@ -96,7 +94,7 @@ def downgrade() -> None:
     op.drop_table('dishes')
     op.drop_table('tables')
     op.drop_table('ingredients')
-    op.drop_table('categoryies')
+    op.drop_table('categories')
     op.drop_table('restaurant')
     op.drop_table('authefication')
     # ### end Alembic commands ###

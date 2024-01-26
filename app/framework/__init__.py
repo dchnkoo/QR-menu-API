@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from ..database.db.db_model import DB
+from ..database.db.models.db_model import DB
 from .trash_methods.trash import trash
 
 from .JWT.token.auth import JWT
