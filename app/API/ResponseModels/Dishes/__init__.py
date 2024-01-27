@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import List
 
 
 class Dish(BaseModel):
@@ -12,5 +13,4 @@ class Dish(BaseModel):
 
 class DishResponse(BaseModel):
     status: int
-    token: str
-    dish: Dish
+    dish: Dish | List[Dish]

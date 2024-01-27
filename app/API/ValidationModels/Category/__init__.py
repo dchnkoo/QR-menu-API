@@ -3,7 +3,6 @@ from typing import Union
 
 
 class CategorySet(BaseModel):
-    token: str
     category: str
     color: str
 
@@ -16,5 +15,4 @@ class CategoryId(BaseModel):
     category_id: int 
 
 class CategoryDelete(BaseModel):
-    token: str
     delete: Union[CategoryId, CategoryAll]

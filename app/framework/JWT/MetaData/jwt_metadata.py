@@ -1,23 +1,12 @@
 from typing import Any
-import json
-
-from ..JWTCache.cache_decorator.decorator import jwtcache
-from .. import CACHE_JWT
+from ..JWTCache.cache_decorator.decorator import jwtcache, jwtgetcache
 
 
 class JWTMetaData:
 
+    @jwtgetcache
     def __init__(self) -> None:
-        self._tokens = self._get_cache()
-        
-    def _get_cache(self):
-        with open(CACHE_JWT, 'a+') as f:
-            f.seek(0)
-            content = f.read()
-            data = json.loads(content) if content else {}
-            
-
-        return data 
+        self._tokens = None
 
     def __setattr__(self, name: str, value: Any) -> None:
         if name == '_tokens':

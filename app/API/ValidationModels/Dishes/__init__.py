@@ -11,11 +11,9 @@ class Dish(BaseModel):
 
 
 class DishAdd(BaseModel):
-    token: str
     data: Dish
 
 
 class DishDelete(BaseModel):
-    token: str
     dish_id: int
     category_id: int

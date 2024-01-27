@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 
 class RestaurantRegister(BaseModel):
-    token: str
     name: str
     address: str
     start_day: str = None
@@ -13,7 +12,6 @@ class RestaurantRegister(BaseModel):
 
 
 class RestaurantUpdate(BaseModel):
-    token: str
     name: str = None
     address: str = None
     start_day: str = None

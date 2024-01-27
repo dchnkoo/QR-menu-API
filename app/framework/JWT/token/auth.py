@@ -40,8 +40,13 @@ class JWT:
             return [False, 'Токен прострочений. Вам потрібно оновити токен.', token]
 
         except InvalidTokenError:
-            logger.error(f"Token {token[:10]} is invalid. Check your SCERET or KEY")
+            logger.error(f"Token is invalid.")
             return [False, 'Недійсний токен. Перевірте ваш секретний ключ та токен.', token]
+
+        except Exception as e:
+            logger.error(f"Відсутній токен\n\nError: {e}")
+            return [False, 'Відсутній токен']
+
 
     def save_token(self, token: str, hashf: str) -> None:
         self._token[token] = hashf

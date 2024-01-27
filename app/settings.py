@@ -24,6 +24,24 @@ logger.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s: %(me
                    filename=BASE_DIR / 'app.log', filemode='w')
 
 
+# app init
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+app = FastAPI(
+    title='QR-menu System'
+)
+
+# CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=['*'],
+)
+
+
 # ADMIN
 
     # Tables per page

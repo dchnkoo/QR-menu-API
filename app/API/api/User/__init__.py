@@ -1,7 +1,8 @@
 from ....framework import app, logger, db, t, jwt
 
-from ...ValidationModels import (RegisterUser, Login)
-from ...ResponseModels import (RegisterResponseFail, RegisterResponseSucces)
+from ...ValidationModels.Register import RegisterUser
+from ...ValidationModels.Login import Login
+from ...ResponseModels.Register import (RegisterResponseFail, RegisterResponseSucces)
 
 from ....database.tables import authefication
 

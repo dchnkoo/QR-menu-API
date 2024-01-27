@@ -1,24 +1,22 @@
-from fastapi import FastAPI
-
 from ..database.db.models.db_model import DB
 from .trash_methods.trash import trash
 
 from .JWT.token.auth import JWT
+from .JWT.validation import JWTValidation
 
-from ..settings import logger
+from ..settings import logger, app
 
 from ..API.QR.object.qr import QR
 
-# ініціалізуємо апі додаток
-app = FastAPI(
-    title='QR-menu System'
-)
+# JWT
+jwt_validation = JWTValidation()
+jwt = JWT()
 
 # Взаємодія з базою данних
 db = DB()
 
+# other methods
 t = trash()
 
-jwt = JWT()
-
+# QR-code 
 qr = QR()

@@ -21,7 +21,6 @@ class DB:
 
     def _check_obj_instance(self, instance: object) -> object | ValueError:
         try:
-            print(tables_names, instance.name)
             return instance.name in tables_names
         except Exception:
             self.err(instance)

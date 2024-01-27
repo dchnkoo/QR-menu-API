@@ -13,5 +13,4 @@ class RestaurantData(BaseModel):
 
 class RestaurantResponseSucces(BaseModel):
     status: int
-    token: str
     restaurant_data: RestaurantData
