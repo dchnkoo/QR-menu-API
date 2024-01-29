@@ -50,7 +50,8 @@ dishes = Table(
     Column('price', Integer),
     Column('weight', Integer),
     Column('comment', VARCHAR),
-    Column('category_id', Integer, ForeignKey('categories.id', ondelete='CASCADE'))
+    Column('category_id', Integer, ForeignKey('categories.id', ondelete='CASCADE')),
+    Column('restaurant_id', Integer, ForeignKey("restaurant.id", ondelete="CASCADE"))
 )
 
 ingredients = Table(
@@ -59,20 +60,8 @@ ingredients = Table(
 
     Column('id', Integer, primary_key=True),
     Column('ingredient', VARCHAR),
+    Column("dish_id", Integer, ForeignKey('dishes.id', ondelete="CASCADE")),
     Column('restaurant_id', Integer, ForeignKey('restaurant.id', ondelete='CASCADE')),
-)
-
-dishIngredient = Table(
-    'dishIngredient',
-    metadata,
-
-    Column('dish_id', Integer, 
-           ForeignKey('dishes.id', ondelete='CASCADE'), 
-           primary_key=True),
-
-    Column('ingredient_id', Integer,
-           ForeignKey('ingredients.id', ondelete='CASCADE'),
-           primary_key=True)
 )
 
 tables = Table(

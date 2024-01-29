@@ -1,4 +1,3 @@
-from ...settings import Path
+from .token.auth import JWT
 
-
-CACHE_JWT = str(Path(__file__).parent) + '/JWTCache/jwtmetadata.json'
+jwt = JWT()

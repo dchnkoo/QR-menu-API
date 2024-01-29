@@ -8,7 +8,7 @@ RUN pip install --upgrade pip
 
 RUN pip install -r requirements.txt
 
-RUN alembic revision --autogenerate -m "create tables"
+RUN alembic revision --autogenerate
 
 RUN alembic upgrade head
 

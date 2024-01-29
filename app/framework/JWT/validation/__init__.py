@@ -1,5 +1,6 @@
-from ..token.auth import JWT
 from fastapi import Request, HTTPException
+
+from .. import jwt
 
 from ....settings import logger
 
@@ -7,7 +8,7 @@ from ....settings import logger
 class JWTValidation:
 
     def __init__(self) -> None:
-        self.jwt = JWT()
+        self.jwt = jwt
 
     def __call__(self, request: Request):        
 
@@ -27,4 +28,13 @@ class JWTValidation:
 
             raise HTTPException(status_code=403, detail=is_valid[1])
         
-        return token
+        if request.method == "DELETE" and request.url.path.endswith("delete/session/user"):
+            try: self.jwt.delete_token(token)
+            except Exception as e:
+                logger.error(f"Помилка під час видалення токену {token[:10]}")
+                raise HTTPException(status_code=500, detail="Невідома помилка")
+            
+            raise HTTPException(status_code=200, detail="Користувача видаленно з сессії")
+
+        try: return self.jwt.get_user_hash(token)
+        except Exception: raise HTTPException(status_code=500, detail="Невідома помилка спробуйте знову згенерувати токен")

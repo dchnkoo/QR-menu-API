@@ -1,4 +1,4 @@
-from ....database.db.models.db_model import DB
+from ....database.db.models.async_model import DB
 from io import BytesIO
 import threading
 
@@ -20,7 +20,7 @@ class QR:
 
         return base64.b64encode(buffer.getvalue()).decode(), url
 
-    def generate(self, restaurant: str, id: int, tables_: int) -> None:
+    async def generate(self, restaurant: str, id: int, tables_: int) -> None:
         db = DB()
         for i in range(1, tables_ + 1):
             qr, url = self._qr(restaurant, id, i)
@@ -32,37 +32,41 @@ class QR:
                 'restaurant_id': id
             }
 
-            db.insert_data(tables, **data)
+            await db.async_insert_data(tables, **data)
 
     def threads(self, func, *args):
+        import asyncio
 
-        th = threading.Thread(target=func, args=args)
+        th = threading.Thread(target=asyncio.run, args=(func(*args),))
         th.daemon = True
         th.start()
 
         return True
-    
-    def delete_all(self, restaurant_id: int) -> None:
+
+
+    async def delete_all(self, restaurant_id: int) -> None:
         db = DB()
 
-        try: db.delete_data(tables, exp=tables.c.restaurant_id == restaurant_id)
+        try: await db.async_delete_data(tables, exp=tables.c.restaurant_id == restaurant_id)
         except Exception as e:
             logger.error(f"Помилка під час видалення данних про столи\n\nError: {e}")
 
-    def delete_table(self, restaurant_id: int, table_number: int) -> None:
+
+    async def delete_table(self, restaurant_id: int, table_number: int) -> None:
         db = DB()
 
-        try: db.delete_data(tables, and__=(tables.c.restaurant_id == restaurant_id,
+        try: await db.async_delete_data(tables, and__=(tables.c.restaurant_id == restaurant_id,
                                       tables.c.table_number == table_number))
         except Exception as e:
             logger.error(f"Помилка під час видалення данних про столи\n\nError: {e}")
 
-    def get_tables(self, restaurant_id: int, page: int = 1) -> list[dict]:
+
+    async def get_tables(self, restaurant_id: int, page: int = 1) -> list[dict]:
         db = DB()
 
         offset = (page - 1) * TABLES_PER_PAGE
 
-        try: data, total = db.get_where(tables, exp=tables.c.restaurant_id == restaurant_id,
+        try: data, total = await db.async_get_where(tables, exp=tables.c.restaurant_id == restaurant_id,
                      count=True, offset=offset, limit=TABLES_PER_PAGE, to_dict=True)
         except Exception as e:
             logger.error(f"Помилка під час отримання данних про столи\n\nError: {e}")

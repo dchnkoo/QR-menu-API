@@ -1,9 +1,10 @@
 from app import settings
 
-from sqlalchemy import create_engine, MetaData
+from sqlalchemy import MetaData
+from sqlalchemy.ext.asyncio import create_async_engine
 
 
 # Визначаємо підключення до бази данних та базову модель
 metadata = MetaData()
 
-engine = create_engine(settings.DATABASE)
+engine = create_async_engine(settings.DATABASE)

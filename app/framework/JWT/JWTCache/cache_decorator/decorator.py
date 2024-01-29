@@ -1,5 +1,5 @@
 import json
-from ... import CACHE_JWT
+from ...conf import CACHE_JWT
 
 
 def jwtcache(func):
