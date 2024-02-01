@@ -1,0 +1,30 @@
+version: '3.7'
+
+
+services:
+  
+  db:
+    image: postgres:15
+    restart: always 
+    container_name: db
+    command: -p 5435
+    expose:
+      - 5435
+    ports:
+      - "5435:5432"
+    environment:
+      - POSTGRES_PASSWORD=sgvfay135snk
+      - POSTGRES_USER=qrapi
+      - POSTGRES_DB=qrsystem
+  
+  api:
+    container_name: qrmenu
+    image: dchnkoo/qr-sys:0.0.1-ps
+    command: ["./app.sh"]
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://qrapi:sgvfay135snk@db:5435/qrsystem
+      - DATABASE_URL_SYNC=postgresql://qrapi:sgvfay135snk@db:5435/qrsystem
+    ports:
+      - "8000:8080"
+    depends_on:
+      - db
