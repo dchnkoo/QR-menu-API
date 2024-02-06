@@ -20,6 +20,8 @@ services:
   api:
     container_name: qrmenu
     image: dchnkoo/qr-sys:0.0.1-ps
+    build: 
+      context: ./qr-sys
     command: ["./app.sh"]
     environment:
       - DATABASE_URL=postgresql+asyncpg://qrapi:sgvfay135snk@db:5435/qrsystem
