@@ -13,9 +13,9 @@ services:
     ports:
       - "5435:5432"
     environment:
-      - POSTGRES_PASSWORD=sgvfay135snk
-      - POSTGRES_USER=qrapi
-      - POSTGRES_DB=qrsystem
+      - POSTGRES_PASSWORD=your_password
+      - POSTGRES_USER=your_username
+      - POSTGRES_DB=your_database
   
   api:
     container_name: qrmenu
@@ -24,8 +24,8 @@ services:
       context: ./qr-sys
     command: ["./app.sh"]
     environment:
-      - DATABASE_URL=postgresql+asyncpg://qrapi:sgvfay135snk@db:5435/qrsystem
-      - DATABASE_URL_SYNC=postgresql://qrapi:sgvfay135snk@db:5435/qrsystem
+      - DATABASE_URL=postgresql+asyncpg://your_username:your_password@db:5435/your_database
+      - DATABASE_URL_SYNC=postgresql://your_username:your_password@db:5435/your_database
     ports:
       - "8000:8080"
     depends_on:
