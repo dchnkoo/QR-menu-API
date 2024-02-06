@@ -8,12 +8,3 @@ class Dish(BaseModel):
     weight: int
     comment: str = ''
     category_id: int
-
-
-class DishAdd(BaseModel):
-    data: Dish
-
-
-class DishDelete(BaseModel):
-    dish_id: int
-    category_id: int

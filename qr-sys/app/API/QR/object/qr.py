@@ -61,6 +61,8 @@ class QR:
 
 
     async def get_tables(self, restaurant_id: int, page: int = 1) -> list[dict]:
+        from fastapi.responses import JSONResponse
+        
         db = _async.async_db()
 
         offset = (page - 1) * TABLES_PER_PAGE
@@ -69,8 +71,8 @@ class QR:
                      count=True, offset=offset, limit=TABLES_PER_PAGE, to_dict=True)
         except Exception as e:
             logger.error(f"Помилка під час отримання данних про столи\n\nError: {e}")
-            return {"status": 500, "msg": "Невідома помилка під час обробки запиту"}
-
+            return JSONResponse(status_code=500, content={"msg": "Невідома помилка під час обробки запиту"})
 
         total_pages = (total + TABLES_PER_PAGE - 1) // TABLES_PER_PAGE
-        return {"data": data, 'total_pages': total_pages, 'page': page}
+
+        return JSONResponse(status_code=200, content={"data": data, 'total_pages': total_pages, 'page': page})

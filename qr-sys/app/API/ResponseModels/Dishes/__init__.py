@@ -11,6 +11,5 @@ class Dish(BaseModel):
     comment: str = ''
     category_id: int
 
-class DishResponse(BaseModel):
-    status: int
-    dish: Dish | List[Dish]
+class DishResponseList(BaseModel):
+    data: List[Dish]

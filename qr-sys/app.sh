@@ -1,5 +1,7 @@
 #!/bin/bash
 
+sleep 10
+
 alembic revision --autogenerate
 
 alembic upgrade head

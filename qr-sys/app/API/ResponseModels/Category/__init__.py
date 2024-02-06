@@ -8,10 +8,6 @@ class CategoryTable(BaseModel):
     color: str
     restaurant_id: int
 
-class CategoryAddResponse(BaseModel):
-    status: int
-    category: CategoryTable
-
 
 class GetCategories(BaseModel):
     status: int

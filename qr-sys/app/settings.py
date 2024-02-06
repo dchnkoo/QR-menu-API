@@ -1,22 +1,15 @@
 from pathlib import Path
 
-from dotenv import load_dotenv
-import os
-
 
 BASE_DIR = Path(__file__).parent.parent
-load_dotenv(BASE_DIR / ".env")
 
+# for peoduction set DEBUG = False
 DEBUG = False
 
-# DATABASE
-if DEBUG:
-    DATABASE = "sqlite+aiosqlite:///" + str(BASE_DIR) + "/db.sqlite3"
-    DATABASE_SYNC = "sqlite:///" + str(BASE_DIR) + "/db.sqlite3"
-else:
-    DATABASE_SYNC = os.environ.get("DATABASE_URL_SYNC")
-    DATABASE = os.environ.get("DATABASE_URL") # production
 
+# DATABASE
+DATABASE="postgresql+asyncpg://test:test@localhost:5435/test"
+DATABASE_SYNC="postgresql://test:test@localhost:5435/test"
 
 
 # DOMAIN - USE FOR QR-codes GENERATE
@@ -24,7 +17,9 @@ DOMAIN = "http://127.0.0.1:8000"
 
 
 # JWT
-SECRET_KEY = os.environ.get("JWT_KEY")
+from random import randint
+
+SECRET_KEY = "".join([chr(randint(33, 125)) for _ in range(70)])
 
 
 # LOGGNIG

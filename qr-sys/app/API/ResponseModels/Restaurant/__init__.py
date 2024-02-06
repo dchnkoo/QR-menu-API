@@ -12,5 +12,4 @@ class RestaurantData(BaseModel):
 
 
 class RestaurantResponseSucces(BaseModel):
-    status: int
     restaurant_data: RestaurantData

@@ -13,6 +13,3 @@ class CategoryAll(BaseModel):
 class CategoryId(BaseModel):
     type: str = "category"
     category_id: int 
-
-class CategoryDelete(BaseModel):
-    delete: Union[CategoryId, CategoryAll]

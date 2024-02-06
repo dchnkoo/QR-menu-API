@@ -42,17 +42,15 @@ class async_db:
             session = await self.get_async_session()
             data_insert = insert(instance).values(**kwargs)
             
-            await session.begin()
-            await session.execute(data_insert)
-            await session.commit()
+            async with session.begin() as transaction:
+                await transaction.session.execute(data_insert)
+                await transaction.commit()
             
-            if get_data is True:
-                logger.info(f'insert {kwargs.keys()} into {instance}')
-                query = text(''.join([f"{instance.name}.{k}='{v}' AND " for k, v in kwargs.items() if v])[:-5])    
+            logger.info(f'insert {kwargs.keys()} into {instance}')
+            query = text(''.join([f"{instance.name}.{k}='{v}' AND " for k, v in kwargs.items() if v])[:-5])    
 
-                return await self.async_get_where(instance, exp=query, all_=False, session=session) 
+            return await self.async_get_where(instance, exp=query, all_=False) 
             
-            await session.close()
         else:
             self.err(instance)
 
@@ -60,8 +58,7 @@ class async_db:
     async def async_get_where(self, instance: object, 
                   and__ = None, exp = None, 
                   all_: bool = True, count: bool = False,
-                  offset: int = None, limit: int = None, to_dict: bool = False,
-                  session: AsyncSession = None):
+                  offset: int = None, limit: int = None, to_dict: bool = False):
 
         query = select(instance)
 
@@ -70,25 +67,22 @@ class async_db:
         else:
             query = query.where(exp)
 
-        if session is None:
-            session = await self.get_async_session()
-            await session.begin()
-
-        count_items = await self.count_items(session, exp, instance) if (count and exp is not None) else self.count_items(session, and_, instance, and__) if (count and and__ is not None) else None
-
         if offset:
             query = query.offset(offset)
         if limit:
             query = query.limit(limit)
-
-        result = await session.execute(query)
+        
+        
+        session = await self.get_async_session()
+        async with session.begin() as transaction:
+            count_items = await self.count_items(transaction, exp, instance) if (count and exp is not None) else self.count_items(transaction, and_, instance, and__) if (count and and__ is not None) else None
+            result = await transaction.session.execute(query)
 
         if all_:
             result = result.fetchall()
         else:
             result = result.fetchone()
 
-        await session.close()
         if to_dict:
             if isinstance(result, list):
                 result = [i._asdict() for i in result]
@@ -100,7 +94,7 @@ class async_db:
 
     async def count_items(self, executor: AsyncSession, esteintment, instance: object = None, *args) -> int:
         stmt = select(func.count()).select_from(instance).where(esteintment(*args) if args else esteintment)
-        result = await executor.execute(stmt)
+        result = await executor.session.execute(stmt)
         return result.scalar()
 
 
@@ -114,12 +108,12 @@ class async_db:
 
             session = await self.get_async_session()
 
-            await session.begin()
-            await session.execute(query)
-            await session.commit()
+            async with session.begin() as transaction:
+                await transaction.session.execute(query)
+                await transaction.commit()
 
             logger.info(f"update {kwargs.keys()} in {instance}")
-            return await self.async_get_where(instance, and__, exp, all_=False, session=session)
+            return await self.async_get_where(instance, and__, exp, all_=False)
 
         else:
             self.err(instance)
@@ -135,9 +129,9 @@ class async_db:
 
             session = await self.get_async_session()
 
-            async with session.begin():
-                await session.execute(query)
-                await session.commit()
+            async with session.begin() as transaction:
+                await transaction.session.execute(query)
+                await transaction.commit()
 
         else:
             self.err(instance)
@@ -163,9 +157,8 @@ class async_db:
 
         session = await self.get_async_session()
 
-        async with session.begin():
-            result = await session.execute(query)
-        
+        async with session.begin() as transaction:
+            result = await transaction.session.execute(query)
 
         one = table_1.columns.keys()
         two = table_2.columns.keys()

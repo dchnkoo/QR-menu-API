@@ -12,7 +12,4 @@ class DelDataValidationB(BaseModel):
     type: str
     table_number: int
 
-class DeleteTable(BaseModel):
-    data: Union[DelDataValidationB, 
-                DelDataValidationA]
     

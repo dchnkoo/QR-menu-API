@@ -12,10 +12,11 @@ from alembic import context
 config = context.config
 
 
-from app.settings import DATABASE
+from app.settings import DATABASE, DEBUG
+import os
 
 section = config.config_ini_section
-config.set_section_option(section, 'DATABASE', DATABASE)
+config.set_section_option(section, 'DATABASE', DATABASE if DEBUG else os.environ.get("DATABASE_URL"))
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
