@@ -1,10 +1,10 @@
 
 def get_restaurant() -> dict:
-    return {"name": "PizzaDay", "address": "st. Example, 202"}
+    return {"name": "PizzaDay"}
 
 
 def get_restaurant_update() -> dict:
-    return {"start_day": "Monday", "end_day": "Friday", "start_time": "9:00", "end_time": "21:00"}
+    return {"address": "st. Example, 202", "start_day": "Monday", "end_day": "Friday", "start_time": "9:00", "end_time": "21:00"}
 
 async def delete_resturant(client, setup_user: str, cookies: bool = True) -> tuple:
     cookie = {"token": setup_user}

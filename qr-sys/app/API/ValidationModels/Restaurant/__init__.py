@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 class RestaurantRegister(BaseModel):
     name: str
-    address: str
+    address: str = None
     start_day: str = None
     end_day: str = None
     start_time: str = None

@@ -22,7 +22,7 @@ restaurant = Table(
     Column('hashf', String, ForeignKey('authefication.hashf', ondelete='CASCADE'), 
                    unique=True, nullable=False),
     Column('name', String, nullable=False),
-    Column('address', String, nullable=False),
+    Column('address', String, nullable=True),
     Column('start_day', VARCHAR(30), nullable=True),
     Column('end_day', VARCHAR(30), nullable=True),
     Column('start_time', VARCHAR(30), nullable=True),
