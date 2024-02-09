@@ -8,11 +8,10 @@ from .....ResponseModels.Restaurant import (RestaurantResponseSucces)
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import restaurant 
+from .....tags import RESTAURANT
 
 
-TAG = "Restaurant"
-
-@app.post('/api/admin/add/restaurant', tags=[TAG])
+@app.post('/api/admin/add/restaurant', tags=[RESTAURANT])
 async def restaurant_add(data: RestaurantRegister, hashf: str = Depends(jwt_validation)) -> (RestaurantResponseSucces | RegisterResponseFail):
 
     """

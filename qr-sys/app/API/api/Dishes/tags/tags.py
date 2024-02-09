@@ -1,1 +1,0 @@
-DISHES = "Dishes"

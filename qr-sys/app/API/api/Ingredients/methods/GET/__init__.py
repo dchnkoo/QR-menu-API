@@ -7,7 +7,7 @@ from .....ResponseModels.Ingredients import IngredientGetResponse
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import ingredients
-from ...tags.tags import INGREDIENTS
+from .....tags import INGREDIENTS
 
 
 @app.get('/api/admin/get/ingredients', tags=[INGREDIENTS], dependencies=[Depends(jwt_validation)])

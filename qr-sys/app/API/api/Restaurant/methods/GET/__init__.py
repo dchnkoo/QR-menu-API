@@ -7,7 +7,7 @@ from fastapi import Depends
 from .....ResponseModels.Restaurant import RestaurantResponseSucces
 from .....ResponseModels.Register import RegisterResponseFail
 
-from ...tags.tags import RESTAURANT
+from .....tags import RESTAURANT
 
 
 @app.get('/api/admin/get/restaurant', tags=[RESTAURANT])

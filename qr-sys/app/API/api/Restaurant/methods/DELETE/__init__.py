@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from fastapi import Depends
 
 from .....ResponseModels.Register import RegisterResponseFail
-from ...tags.tags import RESTAURANT
+from .....tags import RESTAURANT
 
 
 @app.delete('/api/admin/delete/restaurant', tags=[RESTAURANT])

@@ -1,13 +1,13 @@
-from ......framework import app, db, t, jwt
+from ......framework import app, db, t, jwt, recovery, send_mail, logger
 from fastapi.responses import JSONResponse
 
 from .....ValidationModels.Register import RegisterUser
 from .....ValidationModels.Login import LoginByLP
+from .....ValidationModels.Recovery import RecoverySetCode, Recovery
 from .....ResponseModels.Register import (RegisterResponseFail, RegisterResponseSucces)
 
 from ......database.tables import (authefication)
-from ...tags.tags import USER
-
+from .....tags import USER, EMAIL
 
 
 @app.post('/api/admin/register', tags=[USER])
@@ -80,3 +80,65 @@ async def login(data: LoginByLP) -> (RegisterResponseSucces | RegisterResponseFa
         return JSONResponse(status_code=200, content={"token": token, 'user_data': t.parse_user_data(user._asdict())})
     
     return JSONResponse(status_code=403, content={"msg": f"{email} користувач відсутній в системі або хибний пароль"})
+
+
+@app.post('/api/admin/set/recovery/code', tags=[USER, EMAIL])
+async def set_recovery_code(data: RecoverySetCode) -> RegisterResponseFail:
+
+    """
+    <h1>Встановлення коду для відновлення</h1>
+    <p>Метод створює код для відновлення паролю та надсилає його на пошту користувача яка вказана в тілі запиту</p>
+    """
+
+    email = data.email
+
+    try: find_user = await db.async_get_where(authefication, exp=authefication.c.email == email,
+                                              all_=False, to_dict=True)
+    except Exception as e:
+        logger.error(f"Помилка під час отримання емейлу для відновлення паролю.\n\nEmail: {email}\nError: {e}")
+        return JSONResponse(status_code=400, content={"msg": "Помилка під час пошуку користувача"})
+    
+    if find_user is None:
+        return JSONResponse(status_code=400, content={"msg": "Користувч відстуній в системі"})
+
+    find_user = find_user["email"] 
+    code = recovery.set_code()
+
+    recovery[find_user] = code
+
+    try:
+        msg = f"""If you don't request code for recovery, ignore this mail.\nYour code for recovery: {code}"""
+        send = await send_mail(find_user, "Restaurant QR-system recovery account", msg)
+        return JSONResponse(status_code=200, content=send)
+
+    except Exception as e:
+        del recovery[find_user]
+        logger.error(f"Помилка під час відправки email.\n\nEmail: {find_user}\nError: {e}")
+        return JSONResponse(status_code=500, content={"msg": "Невідома помилка під час обробки транзакії"})
+
+
+@app.post("/api/admin/recovery/code/check", tags=[USER])
+async def recovery_code_check(data: Recovery) -> RegisterResponseFail:
+
+    """
+    <p>Метод перевіряє код який надіслав користувач та якщо код дійсний повертає стасус 200</p>
+    """
+
+    email, code = data.email, data.code
+
+    try: find_user = await db.async_get_where(authefication, exp=authefication.c.email == email,
+                                              all_=False, to_dict=True)
+    except Exception as e:
+        logger.error(f"Помилка під час отримання емейлу для відновлення паролю.\n\nEmail: {email}\nError: {e}")
+        return JSONResponse(status_code=400, content={"msg": "Помилка під час пошуку користувача"})
+    
+    if find_user is None:
+        return JSONResponse(status_code=400, content={"msg": "Користувч відстуній в системі"})
+    
+    find_user = find_user["email"] 
+
+    if code == recovery[find_user]:
+        del recovery[find_user]
+        return JSONResponse(status_code=200, content={"msg": "Код дійсний."})
+    
+    return JSONResponse(status_code=403, content={"msg": "Введений код не дійсний"})

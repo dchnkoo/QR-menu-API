@@ -6,7 +6,7 @@ from fastapi import Depends
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import dishes
-from ...tags.tags import DISHES
+from .....tags import DISHES
 
 
 @app.delete('/api/admin/delete/dish', tags=[DISHES], dependencies=[Depends(jwt_validation)])

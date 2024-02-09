@@ -7,7 +7,7 @@ from .....ResponseModels.Register import RegisterResponseFail
 from .....ResponseModels.Login import SuccesLogin
 
 from fastapi import Depends
-from ...tags.tags import USER
+from .....tags import USER
 
 
 @app.get("/api/admin/login/token", tags=[USER])

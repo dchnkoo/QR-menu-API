@@ -8,7 +8,7 @@ from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import (restaurant, categories, dishes,
                                  ingredients)
-from ...tags.tags import CATEGORY
+from .....tags import CATEGORY
 
 
 @app.get('/api/admin/get/categories', tags=[CATEGORY])

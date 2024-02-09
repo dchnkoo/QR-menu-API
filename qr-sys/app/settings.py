@@ -1,4 +1,6 @@
 from pathlib import Path
+import json
+import os
 
 
 BASE_DIR = Path(__file__).parent.parent
@@ -40,9 +42,12 @@ app = FastAPI(
 )
 
 # CORS
+
+origins = json.loads(os.environ.get("CROS_ORIGINS")) if "CROS_ORIGINS" in os.environ.keys() else ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['*'],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=['*'],
@@ -53,3 +58,10 @@ app.add_middleware(
 
     # Tables per page
 TABLES_PER_PAGE = 10
+
+
+# email | if DEBUG = False use docker env with the same constants
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 587
+SENDER_EMAIL = ...
+SENDER_PASSWORD = ...

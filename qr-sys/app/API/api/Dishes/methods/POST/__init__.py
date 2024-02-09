@@ -7,7 +7,7 @@ from .....ValidationModels.Dishes import Dish
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import dishes, restaurant
-from ...tags.tags import DISHES
+from .....tags import DISHES
 
 
 @app.post('/api/admin/add/dish', tags=[DISHES])

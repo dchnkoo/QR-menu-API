@@ -6,7 +6,7 @@ from fastapi import Depends
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import (restaurant, categories)
-from ...tags.tags import CATEGORY
+from .....tags import CATEGORY
 
 
 @app.delete('/api/admin/delete/categories', tags=[CATEGORY])

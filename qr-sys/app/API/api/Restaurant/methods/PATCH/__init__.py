@@ -8,7 +8,7 @@ from .....ValidationModels.Restaurant import RestaurantUpdate
 from .....ResponseModels.Restaurant import RestaurantResponseSucces
 from .....ResponseModels.Register import RegisterResponseFail
 
-from ...tags.tags import RESTAURANT
+from .....tags import RESTAURANT
 
 
 @app.patch('/api/admin/update/restaurant', tags=[RESTAURANT])

@@ -7,7 +7,7 @@ from .....ValidationModels.Tables import CreateTable
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import (restaurant)
-from ...tags.tags import TABLES
+from .....tags import TABLES
 
 
 @app.post('/api/admin/create/tables', tags=[TABLES])

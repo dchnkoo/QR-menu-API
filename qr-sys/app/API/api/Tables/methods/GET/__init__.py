@@ -7,7 +7,7 @@ from .....ResponseModels.Tables import GetTablesResponse
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import restaurant
-from ...tags.tags import TABLES
+from .....tags import TABLES
 
 
 @app.get('/api/admin/get/tables', tags=[TABLES])

@@ -4,7 +4,7 @@ from fastapi import Depends
 
 from .....ResponseModels.Register import RegisterResponseFail
 from ......database.tables import authefication
-from ...tags.tags import USER
+from .....tags import USER
 
 
 @app.delete('/api/admin/delete/session/user', tags=[USER], dependencies=[Depends(jwt_validation)])

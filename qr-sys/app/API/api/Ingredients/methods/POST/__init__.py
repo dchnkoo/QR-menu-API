@@ -9,7 +9,7 @@ from .....ResponseModels.Ingredients import Ingredient
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import (restaurant, ingredients)
-from ...tags.tags import INGREDIENTS
+from .....tags import INGREDIENTS
 
 
 @app.post('/api/admin/add/ingredient', tags=[INGREDIENTS])

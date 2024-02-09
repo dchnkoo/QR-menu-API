@@ -7,7 +7,7 @@ parser = argparse.ArgumentParser(description="Запуск тестів")
 
 def start_tests():
     test_modules = ["User", "Restaurant", "Category",
-                    "Dishes", "Ingredients", "Tables"]
+                    "Dishes", "Ingredients", "Tables", "Email"]
 
     to_dir = "/".join(os.path.abspath(__file__).split("/")[:-1])
     [os.system(f"pytest {to_dir}/{i} -p no:warnings") for i in test_modules]

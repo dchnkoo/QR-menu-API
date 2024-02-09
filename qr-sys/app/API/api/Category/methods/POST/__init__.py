@@ -8,7 +8,7 @@ from .....ResponseModels.Category import CategoryTable
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import (restaurant, categories)
-from ...tags.tags import CATEGORY
+from .....tags import CATEGORY
 
 
 @app.post('/api/admin/add/category', tags=[CATEGORY])

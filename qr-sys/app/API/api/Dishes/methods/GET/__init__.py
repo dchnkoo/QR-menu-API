@@ -7,7 +7,7 @@ from .....ResponseModels.Dishes import DishResponseList
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import dishes
-from ...tags.tags import DISHES
+from .....tags import DISHES
 
 
 @app.get('/api/admin/get/dish', tags=[DISHES], dependencies=[Depends(jwt_validation)])

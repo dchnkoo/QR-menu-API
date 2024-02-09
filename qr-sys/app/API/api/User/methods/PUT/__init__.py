@@ -1,0 +1,38 @@
+from ......framework import app, db, t, logger
+from fastapi.responses import JSONResponse
+
+from .....ValidationModels.Recovery import RecoveryPassword
+from .....ResponseModels.Register import RegisterResponseFail
+
+from ......database.tables import authefication
+from .....tags import USER
+
+
+@app.put("/api/admin/recovery/password", tags=[USER])
+async def recovery_password(data: RecoveryPassword) -> RegisterResponseFail:
+
+    """
+    <h1>Встановлює новий пароль для користувача</h1>
+    """
+
+    email, password = data.email, t.get_hash(data.password)
+
+    try: find_user = await db.async_get_where(authefication, exp=authefication.c.email == email,
+                                              all_=False, to_dict=True)
+    except Exception as e:
+        logger.error(f"Помилка під час отримання емейлу для відновлення паролю.\n\nEmail: {email}\nError: {e}")
+        return JSONResponse(status_code=400, content={"msg": "Помилка під час пошуку користувача"})
+    
+    if find_user is None:
+        return JSONResponse(status_code=400, content={"msg": "Користувч відстуній в системі"})
+    
+    find_user = find_user["email"]
+
+    change_password = {"password": password}
+    try: await db.async_update_data(authefication, exp=authefication.c.email == find_user,
+                                    **change_password)
+    except Exception as e:
+        logger.error(f"Помилка під час зміни паролю користувача.\n\nEmail: {find_user}\nError: {e}")
+        return JSONResponse(status_code=500, content={"msg": "Невідома помилка під час обробки транзакції"})
+    
+    return JSONResponse(status_code=200, content={"msg": f"Пароль для користувача {find_user} змінено"})
