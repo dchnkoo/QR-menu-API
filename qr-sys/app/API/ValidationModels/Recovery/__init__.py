@@ -9,5 +9,5 @@ class Recovery(BaseModel):
     code: str
 
 class RecoveryPassword(BaseModel):
-    email: str
+    id: int
     password: str

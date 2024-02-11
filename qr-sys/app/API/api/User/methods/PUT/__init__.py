@@ -15,9 +15,9 @@ async def recovery_password(data: RecoveryPassword) -> RegisterResponseFail:
     <h1>Встановлює новий пароль для користувача</h1>
     """
 
-    email, password = data.email, t.get_hash(data.password)
+    user_id, password = data.id, t.get_hash(data.password)
 
-    try: find_user = await db.async_get_where(authefication, exp=authefication.c.email == email,
+    try: find_user = await db.async_get_where(authefication, exp=authefication.c.id == user_id,
                                               all_=False, to_dict=True)
     except Exception as e:
         logger.error(f"Помилка під час отримання емейлу для відновлення паролю.\n\nEmail: {email}\nError: {e}")
@@ -26,13 +26,13 @@ async def recovery_password(data: RecoveryPassword) -> RegisterResponseFail:
     if find_user is None:
         return JSONResponse(status_code=400, content={"msg": "Користувч відстуній в системі"})
     
-    find_user = find_user["email"]
+    find_user = find_user["id"]
 
     change_password = {"password": password}
-    try: await db.async_update_data(authefication, exp=authefication.c.email == find_user,
+    try: await db.async_update_data(authefication, exp=authefication.c.id == find_user,
                                     **change_password)
     except Exception as e:
         logger.error(f"Помилка під час зміни паролю користувача.\n\nEmail: {find_user}\nError: {e}")
         return JSONResponse(status_code=500, content={"msg": "Невідома помилка під час обробки транзакції"})
     
-    return JSONResponse(status_code=200, content={"msg": f"Пароль для користувача {find_user} змінено"})
+    return JSONResponse(status_code=200, content={"msg": f"Пароль для користувача змінено"})

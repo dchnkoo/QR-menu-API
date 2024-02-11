@@ -43,16 +43,15 @@ app = FastAPI(
 
 # CORS
 
-origins = json.loads(os.environ.get("CROS_ORIGINS")) if "CROS_ORIGINS" in os.environ.keys() else ["*"]
+origins = list(json.loads(os.environ.get("CORS_ORIGINS_API"))) if "CORS_ORIGINS_API" in os.environ.keys() else ["*"]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=['*'],
+    allow_headers=["*"],
 )
-
 
 # ADMIN
 

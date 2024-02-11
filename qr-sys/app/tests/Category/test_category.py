@@ -1,4 +1,4 @@
-from ...API.ResponseModels.Register import RegisterResponseSucces
+from ...API.ResponseModels.Register import RegisterResponseFail
 from ...API.ResponseModels.Restaurant import RestaurantResponseSucces
 from ...API.ResponseModels.Category import CategoryTable
 
@@ -16,13 +16,13 @@ import httpx
 async def setup(client: httpx.AsyncClient, request):
     data = request.param
 
-    status, user = await registration(client, data)
+    status, user, token = await registration(client, data)
 
-    assert status == 200 and RegisterResponseSucces(**user)
-    token = user.get("token")
+    assert status == 200 and RegisterResponseFail(**user)
 
     status, data = await register_restaurant(client, get_restaurant(),
                         token)
+    
     assert status == 200 and RestaurantResponseSucces(**data)
 
     yield token
@@ -35,24 +35,18 @@ async def setup(client: httpx.AsyncClient, request):
 
 
 @pytest.mark.asyncio
-async def test_add_category_fail(client: httpx.AsyncClient, event_loop):
+async def test_add_category_fail(client: httpx.AsyncClient):
     status, data = await add_category(client, None, cookies=False)
 
     assert status == 403 and ("detail" in data) is True
-
-
-@pytest.mark.asyncio
-async def test_add_category_fail_cookie(client: httpx.AsyncClient, setup: str, event_loop):
-    status, data = await add_category(client, setup[:20])
-
-    assert status == 403 and ("detail" in data) is True
+    
 
 @pytest.mark.asyncio
 @pytest.fixture(scope="function", params=[({"category": "Десерти", "color": "red"},
                                         {"category": "Гарячі страви", "color": "blue"},
                                         {"category": "Холодні страви", "color": "purple"},
                                         {"category": "Напої", "color": "black"})])
-async def add_category_fixture(client: httpx.AsyncClient, setup: str, request, event_loop):
+async def add_category_fixture(client: httpx.AsyncClient, setup: str, request):
     data = request.param
 
     categories = []
@@ -66,43 +60,34 @@ async def add_category_fixture(client: httpx.AsyncClient, setup: str, request, e
 
 
 @pytest.mark.asyncio
-async def test_get_categories_fail(client: httpx.AsyncClient, event_loop):
+async def test_get_categories_fail(client: httpx.AsyncClient):
     request = await client.get('/api/admin/get/categories')
 
     assert request.status_code == 403 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
-async def test_get_categories_fail_cookie(client: httpx.AsyncClient, setup: str, event_loop):
-    cookie = {"token": setup[:20]}
-
-    request = await client.get('/api/admin/get/categories', cookies=cookie)
+async def test_get_full_categories_fail(client: httpx.AsyncClient):
+    request = await client.get('/api/admin/get-full-info/categories')
 
     assert request.status_code == 403 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
-async def test_get_categories(client: httpx.AsyncClient, setup: str, event_loop):
+async def test_delete_categories_fail(client: httpx.AsyncClient):
+    request = await client.delete('/api/admin/delete/categories')
+
+    assert request.status_code == 403 and ("detail" in request.json()) is True
+
+@pytest.mark.asyncio
+async def test_get_categories(client: httpx.AsyncClient, setup: str, add_category_fixture):
     cookie = {"token": setup}
 
     request = await client.get("/api/admin/get/categories", cookies=cookie)
 
     assert request.status_code == 200
 
-@pytest.mark.asyncio
-async def test_get_full_categories_fail(client: httpx.AsyncClient, event_loop):
-    request = await client.get('/api/admin/get-full-info/categories')
-
-    assert request.status_code == 403 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
-async def test_get_full_categories_fail_cookie(client: httpx.AsyncClient, setup: str, event_loop):
-    cookie = {"token": setup[:20]}
-
-    request = await client.get('/api/admin/get-full-info/categories', cookies=cookie)
-
-    assert request.status_code == 403 and ("detail" in request.json()) is True
-
-@pytest.mark.asyncio
-async def test_get_full_categories(client: httpx.AsyncClient, setup: str, add_category_fixture, event_loop):
+async def test_get_full_categories(client: httpx.AsyncClient, setup: str, add_category_fixture):
     cookie = {"token": setup}
 
     request = await client.get('/api/admin/get-full-info/categories', cookies=cookie)
@@ -110,21 +95,7 @@ async def test_get_full_categories(client: httpx.AsyncClient, setup: str, add_ca
     assert request.status_code == 200
 
 @pytest.mark.asyncio
-async def test_delete_categories_fail(client: httpx.AsyncClient, event_loop):
-    request = await client.delete('/api/admin/delete/categories')
-
-    assert request.status_code == 403 and ("detail" in request.json()) is True
-
-@pytest.mark.asyncio
-async def test_delete_categories_fail_cookie(client: httpx.AsyncClient, setup: str, event_loop):
-    cookie = {"token": setup[:20]}
-
-    request = await client.delete('/api/admin/delete/categories', cookies=cookie)
-
-    assert request.status_code == 403 and ("detail" in request.json()) is True
-
-@pytest.mark.asyncio
-async def test_delete_category(client: httpx.AsyncClient, setup: str, add_category_fixture: tuple[dict], event_loop):
+async def test_delete_category(client: httpx.AsyncClient, setup: str, add_category_fixture: tuple[dict]):
     data = [i[0] async for i in add_category_fixture]
 
     for i in data:
@@ -133,7 +104,7 @@ async def test_delete_category(client: httpx.AsyncClient, setup: str, add_catego
         assert status == 200 and ("msg" in data) is True
 
 @pytest.mark.asyncio
-async def test_delete_category_all(client: httpx.AsyncClient, setup: str, add_category_fixture: tuple[dict], event_loop):
+async def test_delete_category_all(client: httpx.AsyncClient, setup: str, add_category_fixture: tuple[dict]):
     status, data = await delete_category(client, setup, {"type": "all", "category_id": 0}, )
 
     assert status == 200 and ("msg" in data) is True

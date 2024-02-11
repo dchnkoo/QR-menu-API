@@ -35,7 +35,7 @@ services:
       - SENDER_PASSWORD=wwxs sqhi qdrp bshf
 
       # CORS
-      - CROS_ORIGINS=["http://localhost:5173"]
+      - CORS_ORIGINS_API=["http://localhost:5173"]
     ports:
       - "8000:8080"
     depends_on:

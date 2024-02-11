@@ -1,9 +1,11 @@
-async def registration(client, data: dict):
+import httpx
+
+async def registration(client: httpx.AsyncClient, data: dict):
     request = await client.post('/api/admin/register', 
                             json=data)
-    
+
     response = request.json()
-    return request.status_code, response
+    return request.status_code, response, request.cookies.get("token")
 
 async def login_by_token(client, token: str):
     cookie = {"token": token}
@@ -16,7 +18,7 @@ async def login_by_token(client, token: str):
 async def login(client, data: dict):
     request = await client.post('/api/admin/login', json=data)
 
-    return request.status_code, request.json()
+    return request.status_code, request.json(), request.cookies
 
 async def delete_user(client, token) -> int:
     request = await client.delete("/api/admin/delete/user", 

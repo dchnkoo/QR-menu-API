@@ -3,6 +3,7 @@ from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from ..MetaData.jwt_metadata import JWTMetaData 
 
 import datetime
+import pytz
 
 from ....settings import SECRET_KEY, logger
 
@@ -13,11 +14,12 @@ class JWT:
         self._token = JWTMetaData()
 
     def get_playload(self, id: int, udata: str, **exp_time) -> dict:
+        exp_utc = datetime.datetime.utcnow() + datetime.timedelta(**exp_time)
         return {
             'user_id': id,
             'username': udata,
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(**exp_time)
-        }
+            'exp': exp_utc
+        }, exp_utc.strftime("%a, %d-%b-%Y %T GMT")
 
     
     def get_token(self, **playload) -> str:
@@ -27,7 +29,6 @@ class JWT:
         
         logger.info(f"create JWT token for {playload['username']} exp time to {playload['exp']}")
         return token
-    
 
     def check_token(self, token: jwt) -> list[bool, dict | str, str]:
         try:

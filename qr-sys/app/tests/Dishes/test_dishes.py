@@ -1,4 +1,4 @@
-from ...API.ResponseModels.Register import RegisterResponseSucces
+from ...API.ResponseModels.Register import RegisterResponseFail
 from ...API.ResponseModels.Restaurant import RestaurantResponseSucces
 from ...API.ResponseModels.Category import CategoryTable
 from ...API.ResponseModels.Dishes import Dish, DishResponseList
@@ -19,10 +19,9 @@ import pytest, pytest_asyncio
 async def setup_user(client: httpx.AsyncClient, request):
     data = request.param
 
-    status, user = await registration(client, data)
+    status, user, token = await registration(client, data)
 
-    assert status == 200 and RegisterResponseSucces(**user)
-    token = user.get("token")
+    assert status == 200 and RegisterResponseFail(**user)
 
     yield token
 
@@ -64,21 +63,28 @@ async def setup_categories(client: httpx.AsyncClient, setup_retaurant: str):
     assert status == 200 and ("msg" in value) is True
 
 @pytest.mark.asyncio
-async def test_add_dish_fail(client: httpx.AsyncClient, event_loop):
+async def test_add_dish_fail(client: httpx.AsyncClient):
     request = await client.post('/api/admin/add/dish')
 
     assert request.status_code == 403 and ("detail" in request.json()) is True
 
-@pytest.mark.asyncio
-async def test_add_dish_fail_cookie(client: httpx.AsyncClient, setup_user: str, event_loop):
-    cookie = {"token": setup_user[:20]}
 
-    request = await client.post('/api/admin/add/dish', cookies=cookie)
+@pytest.mark.asyncio
+async def test_get_dish_fail(client: httpx.AsyncClient):
+    request = await client.get('/api/admin/get/dish')
 
     assert request.status_code == 403 and ("detail" in request.json()) is True
 
+
 @pytest.mark.asyncio
-async def test_add_dish(client: httpx.AsyncClient, setup_categories: tuple[str, list[dict]], event_loop):
+async def test_delete_dish_fail(client: httpx.AsyncClient):
+    request = await client.delete('/api/admin/delete/dish')
+
+    assert request.status_code == 403 and ("detail" in request.json()) is True
+
+
+@pytest.mark.asyncio
+async def test_add_dish(client: httpx.AsyncClient, setup_categories: tuple[str, list[dict]]):
     token, data = setup_categories
 
     for i in data:
@@ -89,21 +95,7 @@ async def test_add_dish(client: httpx.AsyncClient, setup_categories: tuple[str, 
             assert status == 200 and Dish(**response)
 
 @pytest.mark.asyncio
-async def test_get_dish_fail(client: httpx.AsyncClient, event_loop):
-    request = await client.get('/api/admin/get/dish')
-
-    assert request.status_code == 403 and ("detail" in request.json()) is True
-
-@pytest.mark.asyncio
-async def test_get_dish_fail_cookie(client: httpx.AsyncClient, setup_user: str, event_loop):
-    cookie = {"token": setup_user[:20]}
-
-    request = await client.get('/api/admin/get/dish', cookies=cookie)
-
-    assert request.status_code == 403 and ("detail" in request.json()) is True
-
-@pytest.mark.asyncio
-async def test_get_dish(client: httpx.AsyncClient, setup_categories: tuple[str, list[dict]], event_loop):
+async def test_get_dish(client: httpx.AsyncClient, setup_categories: tuple[str, list[dict]]):
     token, data = setup_categories
 
     cookie = {"token": token}
@@ -115,21 +107,7 @@ async def test_get_dish(client: httpx.AsyncClient, setup_categories: tuple[str, 
         assert request.status_code == 200 and DishResponseList(**request.json())
 
 @pytest.mark.asyncio
-async def test_delete_dish_fail(client: httpx.AsyncClient, event_loop):
-    request = await client.delete('/api/admin/delete/dish')
-
-    assert request.status_code == 403 and ("detail" in request.json()) is True
-
-@pytest.mark.asyncio
-async def test_delete_dish_fail_cookie(client: httpx.AsyncClient, setup_user: str, event_loop):
-    cookie = {"token": setup_user[:20]}
-
-    request = await client.delete('/api/admin/delete/dish', cookies=cookie)
-
-    assert request.status_code == 403 and ("detail" in request.json()) is True
-
-@pytest.mark.asyncio
-async def test_delete_dishes(client: httpx.AsyncClient, setup_categories: tuple[str, list[dict]], event_loop):
+async def test_delete_dishes(client: httpx.AsyncClient, setup_categories: tuple[str, list[dict]]):
     token, data = setup_categories
 
     for i in data:

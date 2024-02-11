@@ -30,7 +30,7 @@ class JWTValidation:
         if request.method == "DELETE" and request.url.path.endswith("delete/session/user"):
             try: self.jwt.delete_token(token)
             except Exception as e:
-                logger.error(f"Помилка під час видалення токену {token[:10]}")
+                logger.error(f"Помилка під час видалення токену {token[-10:]}")
                 raise HTTPException(status_code=500, detail="Невідома помилка")
             
             raise HTTPException(status_code=200, detail="Користувача видаленно з сессії")

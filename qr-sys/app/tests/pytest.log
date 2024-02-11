@@ -1,5 +1,0 @@
-02:55:13 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK" * (_client.py:1758)
-02:55:15 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK" * (_client.py:1758)
-02:55:16 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK" * (_client.py:1758)
-02:55:17 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK" * (_client.py:1758)
-02:55:19 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK" * (_client.py:1758)
