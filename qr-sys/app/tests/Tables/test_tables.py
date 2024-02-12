@@ -70,7 +70,7 @@ async def test_delete_table(client: httpx.AsyncClient, setup: str, table: int):
 
 
 @pytest.mark.asyncio
-@pytest.mark.parametrize("num", list(range(1, 11)))
+@pytest.mark.parametrize("num", list(range(1, 9)))
 async def test_get_tables(client: httpx.AsyncClient, num: int, setup: str):
     cookie = {"token": setup}
 

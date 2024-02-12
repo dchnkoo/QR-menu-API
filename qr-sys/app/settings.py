@@ -15,7 +15,7 @@ DATABASE_SYNC="postgresql://test:test@localhost:5435/test"
 
 
 # DOMAIN - USE FOR QR-codes GENERATE
-DOMAIN = "http://127.0.0.1:8000"
+DOMAIN = "http://qrsystem.source.com"
 
 
 # JWT
@@ -61,6 +61,12 @@ TABLES_PER_PAGE = 10
 
 # email | if DEBUG = False use docker env with the same constants
 SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 587
-SENDER_EMAIL = ...
-SENDER_PASSWORD = ...
+SMTP_PORT = 465
+SENDER_EMAIL = "dmshop1307@gmail.com"
+SENDER_PASSWORD = "wwxs sqhi qdrp bsnf"
+
+
+# redis
+REDIS_HOST = "localhost"
+REDIS_PORT = 6379
+REDIS_DB = 0

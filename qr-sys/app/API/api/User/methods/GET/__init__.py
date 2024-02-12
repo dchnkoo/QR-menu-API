@@ -18,7 +18,7 @@ async def login_by_token(hashf: str = Depends(jwt_validation)) -> (SuccesLogin |
     <p><strong>Щоб отримати данні користувача</strong> та виконати успішне логування у користувача в 
     <strong>cookie</strong> повинен знаходитись JWT токен. Він повинен бути дійсним та мати <strong>ключ token</strong> </p>
     """
-
+    print(hashf)
     try: 
         user = await db.async_get_where(authefication, exp=authefication.c.hashf == hashf,
                         all_=False)

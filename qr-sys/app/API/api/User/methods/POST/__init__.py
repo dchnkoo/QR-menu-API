@@ -113,8 +113,8 @@ async def set_recovery_code(data: RecoverySetCode) -> RegisterResponseFail:
 
     try:
         msg = f"""If you don't request code for recovery, ignore this mail.\nYour code for recovery: {code}"""
-        send = await send_mail(find_user, "Restaurant QR-system recovery account", msg)
-        return JSONResponse(status_code=200, content=send)
+        send_mail.delay(find_user, "Restaurant QR-system recovery account", msg)
+        return JSONResponse(status_code=200, content={"msg": "Плвідомлення надіслано"})
 
     except Exception as e:
         del recovery[find_user]

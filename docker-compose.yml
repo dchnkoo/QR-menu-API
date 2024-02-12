@@ -2,7 +2,12 @@ version: '3.7'
 
 
 services:
-  
+  re:
+    image: redis
+    container_name: re
+    ports:
+      - "6379:6379"
+
   db:
     image: postgres:15
     restart: always 
@@ -19,24 +24,39 @@ services:
   
   api:
     container_name: qrmenu
-    image: dchnkoo/qr-sys:0.0.1-ps
+    image: dchnkoo/qr-sys
     build: 
       context: ./qr-sys
     command: ["./app.sh"]
-    environment:
-      # database
-      - DATABASE_URL=postgresql+asyncpg://test:test@db:5435/test
-      - DATABASE_URL_SYNC=postgresql://test:test@db:5435/test
-
-      # for sending emails
-      - SMTP_SERVER=smtp.gmail.com
-      - SMTP_PORT=587
-      - SENDER_EMAIL=dmshop1307@gmail.com
-      - SENDER_PASSWORD=wwxs sqhi qdrp bshf
-
-      # CORS
-      - CORS_ORIGINS_API=["http://localhost:5173"]
+    env_file:
+      - qr-sys/.env
     ports:
       - "8000:8080"
     depends_on:
       - db
+      - re
+
+  celery:
+    build: 
+      context: ./qr-sys
+    image: dchnkoo/celery
+    container_name: celery
+    command: ["./celery.sh", "celery"]
+    env_file:
+      - qr-sys/.env
+    depends_on:
+      - re
+
+  flower:
+    build: 
+      context: ./qr-sys
+    image: dchnkoo/flower
+    container_name: flower
+    command: ["./celery.sh", "flower"]
+    env_file:
+      - qr-sys/.env
+    depends_on:
+      - re
+      - celery
+    ports:
+      - "5555:5555"

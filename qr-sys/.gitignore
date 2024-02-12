@@ -6,4 +6,3 @@ include/
 lib/
 lib64
 *cfg
-.env

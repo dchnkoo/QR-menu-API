@@ -20,8 +20,7 @@ from ..API.QR.object.qr import QR
 qr = QR()
 
 
-from .email.object import email
-send_mail = email()
+from .email.object import send_mail
 
 
 from .recovery.password.object import recovery_codes
