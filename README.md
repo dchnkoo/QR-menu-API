@@ -8,15 +8,37 @@
 ```bash
 user@~: pip install -r requirements.txt
 ```
+2. Також потрібно запустити PostgreSQL базу данних через докер або pgAdmin
+   та вказати посилання в файлі *app/settings.py*. Заповнити потрібно обидві константи
+    як DATABASE (асинхронне підключення) та DATABASE_SYNC (синхроне).
 
-2. Ініціалізація бази данних та створення всіх таблиць
+3. Ініціалізація бази данних та створення всіх таблиць
 
 ```bash
 user@~: alembic revision --autogenerate
 user@~: alembic upgrade head
 ```
 
-3. Запуск додатку
+4. Так само потрібно запустити redis, він відповідає за збережння куків користувача.
+   Налаштування порту, хосту та бази данних також знаходяться в *app/settings.py*.
+
+
+5. Запуск celery для фонових задач (напр. відправка email)
+
+```bash
+user@~: celery --app=app.framework.celery.object:celery worker -l INFO
+```
+
+6. Запуск flower для візуального перегляду фонових задач
+   
+```bash
+user@~: celery --app=app.framework.celery.object:celery flower
+```
+
+7. DEBUG = False тільки якщо для запуску продакшн середовища через
+   docker-compose.yml, для середовища розробки DEBUG = True.
+ 
+8. Запуск додатку
 
 ```bash
 user@~: uvicorn app.API.api:app --host:<host> --port:<port>
@@ -37,6 +59,7 @@ user@~: uvicorn app.API.api:app --host:<host> --port:<port>
             ...
         - ValidationModels <-- pydantic моделі для валідації входящих запитів від клієнту
             ...
+        - tests <-- тести для додатку
 
     - database 
         - db
@@ -56,8 +79,6 @@ user@~: uvicorn app.API.api:app --host:<host> --port:<port>
 
     - framework
         - JWT
-            - JWTCache <-- Каталог який зберігає кешовані JWT ключи та декоратори які взаємодіють з кешованими токенами
-                ...
             - MetaData
                 - jwt_metadata.py <-- Обьєкт через який відбувається взаємодія з JWT хешованимим токенами (отримання, видалення)
             - token 
@@ -67,10 +88,22 @@ user@~: uvicorn app.API.api:app --host:<host> --port:<port>
                 ...
             - trash_methods
                 - trash.py <-- Обьєкт для методів які незнаєш куди пихнути
-
+        - celery <-- виконує фонові задачі
+           ...
+        - email <-- взаєиодія з SMTP клієнтом 
+           ...
+        - recovery <-- обьєкт для створення праолю відновлення для користувача
+           ...
+        - redis <-- Зберігає в кеші JWT токени користувачів
+           ...
     - settings.py <-- Налаштування для проекту 
 
 
-# Версия 0.0.1-ps
+# Версія 0.0.1-ps
 
 > Використовує PostgreSQL базу данних
+
+# Вкрсія latest
+> + Redis
+> + Celery
+> + Flower
