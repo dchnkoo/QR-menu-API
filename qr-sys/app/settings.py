@@ -8,10 +8,20 @@ BASE_DIR = Path(__file__).parent.parent
 # for peoduction set DEBUG = False
 DEBUG = False
 
-
 # DATABASE
 DATABASE="postgresql+asyncpg://test:test@localhost:5435/test"
 DATABASE_SYNC="postgresql://test:test@localhost:5435/test"
+
+# redis
+REDIS_HOST = "localhost"
+REDIS_PORT = 6379
+REDIS_DB = 0
+
+# email | if DEBUG = False use docker env with the same constants
+SMTP_SERVER = "smtp.gmail.com"
+SMTP_PORT = 465
+SENDER_EMAIL = ...
+SENDER_PASSWORD = ...
 
 
 # DOMAIN - USE FOR QR-codes GENERATE
@@ -58,15 +68,7 @@ app.add_middleware(
     # Tables per page
 TABLES_PER_PAGE = 10
 
+    # LOGO
+MAX_WIDTH = 300
+MAX_HEIGHT = 300
 
-# email | if DEBUG = False use docker env with the same constants
-SMTP_SERVER = "smtp.gmail.com"
-SMTP_PORT = 465
-SENDER_EMAIL = "dmshop1307@gmail.com"
-SENDER_PASSWORD = "wwxs sqhi qdrp bsnf"
-
-
-# redis
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
-REDIS_DB = 0

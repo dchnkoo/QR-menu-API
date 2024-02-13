@@ -1,5 +1,6 @@
 from ......framework import app, jwt_validation, db, logger
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -16,6 +17,6 @@ async def get_dishes(category_id: int) -> (DishResponseList | RegisterResponseFa
                                 to_dict=True)
     except Exception as e:
         logger.error(f"Помилка під час отримання страв\n\nid Категорії: {category_id}\n\nError: {e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час обробки транзакції'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час обробки транзакції')
     
     return JSONResponse(status_code=200, content={"data": data})

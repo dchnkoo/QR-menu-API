@@ -59,7 +59,7 @@ async def test_login_fail(client: httpx.AsyncClient, register: tuple):
 
     status, user, _ =  await login(client, data)
 
-    assert status == 403 and RegisterResponseFail(**user)
+    assert status == 403
 
 @pytest.mark.asyncio
 async def test_get_full_info_fail(client: httpx.AsyncClient, register: tuple):

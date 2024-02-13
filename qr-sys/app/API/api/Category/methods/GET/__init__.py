@@ -1,5 +1,6 @@
 from ......framework import app, jwt_validation, logger, db, t
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -19,14 +20,14 @@ async def get_categories(hashf: str = Depends(jwt_validation)) -> (GetCategories
         restaurant_id = restaurant_id[0]
     except Exception as e:
         logger.error(f"Помилка під час отримання restaurant_id\n\nhashf: {hashf}\n\nError: {e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час обробки транзакції'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час обробки транзакції')
 
 
     try: category = await db.async_get_where(categories, exp=categories.c.restaurant_id == restaurant_id,
                                     to_dict=True)
     except Exception as e:
         logger.error(f"Помилка під час отримання категорії\n\nhashf: {hashf}\n\nrestautant_id: {restaurant_id}\n\nError: {e}")
-        return JSONResponse(status_code=500, content={'msg': "Невідома помилка під час обробки запиту"})
+        raise HTTPException(status_code=500, detail="Невідома помилка під час обробки запиту")
     
     return JSONResponse(status_code=200, content={'categories': category})
 
@@ -38,7 +39,7 @@ async def get_full_info_categories(hashf: str = Depends(jwt_validation)):
                                            all_=False, to_dict=True)
     
     if restaurant_ is None:
-        return JSONResponse(status_code=500, content={"msg": "Неможливо виконати запит через відсутність зарєстрованого закладу у користувача"})
+        raise HTTPException(status_code=500, detail="Неможливо виконати запит через відсутність зарєстрованого закладу у користувача")
 
     restaurant_ = t.parse_user_data(restaurant_)
 

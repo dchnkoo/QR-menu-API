@@ -1,5 +1,6 @@
 from ......framework import app, jwt_validation, logger, db, qr
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -18,6 +19,6 @@ async def get_tables(page: int = 1, hashf: str = Depends(jwt_validation)) -> (Ge
         restaurant_id = restaurant_id[0]
     except Exception as e:
         logger.error(f"Помилка під час отримання столів\n\nhashf: {hashf}\n\nError: {e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час обробки запиту'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час обробки запиту')
 
     return await qr.get_tables(restaurant_id, page)

@@ -1,23 +1,18 @@
 from ....database.db.models import sync, _async
-from io import BytesIO
 
 from ....settings import DOMAIN, TABLES_PER_PAGE, logger
 from ....database.tables import tables
 
-import base64
-import qrcode
+import pyqrcode
 
 
 class QR:
 
     def _qr(self, restaurant: str, id: int, table: int) -> str:
-        buffer = BytesIO()
         url = f"{DOMAIN}/menu/{restaurant}?id={id}&table={table}"
 
-        qr = qrcode.make(url)
-        qr.save(buffer, format="PNG")
-
-        return base64.b64encode(buffer.getvalue()).decode(), url
+        qr = pyqrcode.QRCode(url, version=6)
+        return qr.png_as_base64_str(scale=10, quiet_zone=2), url
 
 
     def generate(self, restaurant: str, id: int, tables_: int) -> None:

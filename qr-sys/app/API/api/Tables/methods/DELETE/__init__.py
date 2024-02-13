@@ -1,6 +1,7 @@
 from ......framework import app, jwt_validation, db, qr, logger
 from ......database.tables import restaurant
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -36,15 +37,15 @@ async def delete_tables(type: str = "all", table_number: int = 0, hashf: str = D
             try: qr.threads(qr.delete_all, (restaurant_id))
             except Exception as e:
                 logger.error(f"Помилка при видаленні всіх столів\n\nhashf: {hashf}\n\nError: {e}")
-                return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час транзакції'})
+                raise HTTPException(status_code=500, detail='Невідома помилка під час транзакції')
 
             return JSONResponse(status_code=200, content={'msg': 'Видаленні всі столи.'})
         case 'table':
             try: await qr.delete_table(restaurant_id, table_number)
             except Exception as e:
                 logger.error(f"Невідома помилка під час видалення столу\n\nhashf: {hashf}\n\nError: {e}")
-                return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час транзакції'})
+                raise HTTPException(status_code=500, detail='Невідома помилка під час транзакції')
 
             return JSONResponse(status_code=200, content={'msg': f'Видаленний стіл - номер: {table_number}.'})
         case _:
-            return JSONResponse(status_code=200, content={'msg': f'Некоректний тип видалення {type}'})
+            raise HTTPException(status_code=400, detail=f'Некоректний тип видалення {type}')

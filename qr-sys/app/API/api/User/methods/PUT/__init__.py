@@ -1,5 +1,6 @@
 from ......framework import app, db, t, logger
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import HTTPException
 
 from .....ValidationModels.Recovery import RecoveryPassword
 from .....ResponseModels.Register import RegisterResponseFail
@@ -21,10 +22,10 @@ async def recovery_password(data: RecoveryPassword) -> RegisterResponseFail:
                                               all_=False, to_dict=True)
     except Exception as e:
         logger.error(f"Помилка під час отримання емейлу для відновлення паролю.\n\nEmail: {email}\nError: {e}")
-        return JSONResponse(status_code=400, content={"msg": "Помилка під час пошуку користувача"})
+        raise HTTPException(status_code=400, detail="Помилка під час пошуку користувача")
     
     if find_user is None:
-        return JSONResponse(status_code=400, content={"msg": "Користувч відстуній в системі"})
+        raise HTTPException(status_code=400, detail="Користувч відстуній в системі")
     
     find_user = find_user["id"]
 
@@ -33,6 +34,6 @@ async def recovery_password(data: RecoveryPassword) -> RegisterResponseFail:
                                     **change_password)
     except Exception as e:
         logger.error(f"Помилка під час зміни паролю користувача.\n\nEmail: {find_user}\nError: {e}")
-        return JSONResponse(status_code=500, content={"msg": "Невідома помилка під час обробки транзакції"})
+        raise HTTPException(status_code=500, detail="Невідома помилка під час обробки транзакції")
     
     return JSONResponse(status_code=200, content={"msg": f"Пароль для користувача змінено"})

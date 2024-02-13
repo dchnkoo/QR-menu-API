@@ -1,5 +1,6 @@
 from ......framework import app, jwt_validation, db, qr, logger
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -20,12 +21,12 @@ async def add_tables(data: CreateTable, hashf: str = Depends(jwt_validation)) ->
         name = get_restaurant[2]
     except Exception as e:
         logger.error(f"Помилка під час пошуку id закладу\n\nhashf: {hashf}\n\nError: {e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час транзакції'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час транзакції')
     
     try: qr.threads(qr.generate, name, restaurant_id, num)
     except Exception as e:
         logger.error(f"Помилка під час створення столів\n\nhashf: {hashf}\n\nError: {e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час транзакції'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час транзакції')
 
     return JSONResponse(status_code=200, content={'msg': 'Столи та QR генеруються це може зайнятий деякий час'})
 

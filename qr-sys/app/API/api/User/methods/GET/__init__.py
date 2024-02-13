@@ -1,5 +1,7 @@
 from ......framework import jwt_validation, app, db, t, logger
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import HTTPException
+
 from ......database.tables import (authefication, restaurant, 
                                    tables, categories)
 
@@ -18,7 +20,7 @@ async def login_by_token(hashf: str = Depends(jwt_validation)) -> (SuccesLogin |
     <p><strong>Щоб отримати данні користувача</strong> та виконати успішне логування у користувача в 
     <strong>cookie</strong> повинен знаходитись JWT токен. Він повинен бути дійсним та мати <strong>ключ token</strong> </p>
     """
-    print(hashf)
+    
     try: 
         user = await db.async_get_where(authefication, exp=authefication.c.hashf == hashf,
                         all_=False)
@@ -26,7 +28,7 @@ async def login_by_token(hashf: str = Depends(jwt_validation)) -> (SuccesLogin |
         return JSONResponse(status_code=200, content={'user_data': t.parse_user_data(user._asdict())})
     except:
         logger.error(f"JWT {hashf} відстуній в JWTMetaData, але залишається дійсним")
-        return JSONResponse(status_code=403, content={'msg': 'Згенеруйте новий токен для користувача'})
+        raise HTTPException(status_code=403, detail='Згенеруйте новий токен для користувача')
 
 
 

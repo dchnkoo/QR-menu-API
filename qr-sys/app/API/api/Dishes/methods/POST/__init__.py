@@ -1,5 +1,6 @@
 from ......framework import app, jwt_validation, db, logger
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -23,6 +24,6 @@ async def add_dish(data: Dish, hashf: str = Depends(jwt_validation)) -> (Dish | 
     try: new_dish = await db.async_insert_data(dishes, **insert_data)
     except Exception as e:
         logger.error(f"Помилка при додавані страви\n\nСессія: {hashf}\n\nError: {e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час виконання'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час виконання')
 
     return JSONResponse(status_code=200, content=new_dish._asdict())    

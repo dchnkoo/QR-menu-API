@@ -1,6 +1,7 @@
 from ......framework import app, jwt_validation, logger, db
 from ......database.tables import restaurant
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -14,7 +15,7 @@ async def restaurant_delete(hashf: str = Depends(jwt_validation)) -> RegisterRes
     try: await db.async_delete_data(restaurant, exp=restaurant.c.hashf == hashf)
     except Exception as e:
         logger.error(f"Сталась помилка при видаленні данних ресторану\n\nhashf: {hashf}\n\nError:\n\n{e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час виконання операції'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час виконання операції')
 
     else:
         return JSONResponse(status_code=200, content={"msg": 'Ресторан видалений з системи'})

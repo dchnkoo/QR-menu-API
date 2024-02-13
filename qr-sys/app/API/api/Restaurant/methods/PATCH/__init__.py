@@ -1,6 +1,7 @@
 from ......framework import app, jwt_validation, t, db, logger
 from ......database.tables import restaurant
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -18,6 +19,6 @@ async def restaurant_data_update(data: RestaurantUpdate, hashf: str = Depends(jw
                                 **t.parse_user_data(data.model_dump()))
     except Exception as e:
         logger.error(f"Помилка при оновленні даннних закладу\n\nhashf: {hashf}\n\n Error: {e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час виконання операції'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час виконання операції')
     
     return JSONResponse(status_code=200, content={'restaurant_data': t.parse_user_data(new_data._asdict())})

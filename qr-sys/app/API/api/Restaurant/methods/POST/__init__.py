@@ -1,4 +1,7 @@
 from ......framework import app, logger, jwt_validation, db, t
+from ......settings import MAX_WIDTH, MAX_HEIGHT
+
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -22,12 +25,20 @@ async def restaurant_add(data: RestaurantRegister, hashf: str = Depends(jwt_vali
     
     """
 
-    filter_data = {k: v for k, v in data.model_dump().items() if k != 'token'} | {'hashf': hashf}
+    restaurant_data = data.model_dump()
+
+    if "logo" in restaurant_data and restaurant_data["logo"] is not None:
+        status, code, msg = t.check_images_size(restaurant_data["logo"], MAX_WIDTH, MAX_HEIGHT)
+
+        if status is False:
+            raise HTTPException(status_code=code, detail=msg)
+
+    filter_data = restaurant_data | {'hashf': hashf}
 
     try: restaurant_data = await db.async_insert_data(restaurant, **filter_data)
     except Exception as e:
         logger.error(e)
-        return JSONResponse(status_code=400, content={'msg': 'Ресторан з таким користувачем вже інсує'})
+        raise HTTPException(status_code=423, detail='Ресторан з таким користувачем вже інсує')
 
     return JSONResponse(status_code=200, content={'restaurant_data': t.parse_user_data(restaurant_data._asdict())})
 

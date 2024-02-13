@@ -1,5 +1,6 @@
 from ......framework import app, jwt_validation, logger, db
 
+from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
@@ -24,7 +25,7 @@ async def delete_categories(type: str = "category", category_id: int = 0, hashf:
 
     except Exception as e:
         logger.error(f"Помилка під час отримання id закладу\n\nhashf: {hashf}\n\nError: {e}")
-        return JSONResponse(status_code=500, content={'msg': 'Невідома помилка під час обробки запиту'})
+        raise HTTPException(status_code=500, detail='Невідома помилка під час обробки запиту')
 
     match type:
 
@@ -33,15 +34,15 @@ async def delete_categories(type: str = "category", category_id: int = 0, hashf:
                                                     categories.c.id == category_id))
             except Exception as e:
                 logger.error(f"Помилка під час видалення категорії id: {category_id}\n\nhashf: {hashf}\n\nrestautant_id: {restaurant_id}\n\nError: {e}")
-                return JSONResponse(status_code=500, content={'msg': "Невідома помилка під час обробки запиту"})
+                raise HTTPException(status_code=500, detail="Невідома помилка під час обробки запиту")
 
             return JSONResponse(status_code=200, content={'msg': f'Категорія id: {category_id} була видаленна з системи'})
         case "all":
             try: await db.async_delete_data(categories, exp=categories.c.restaurant_id == restaurant_id)
             except Exception as e:
                 logger.error(f"Помилка під час видалення категорій\n\nhashf: {hashf}\n\nrestautant_id: {restaurant_id}\n\nError: {e}")
-                return JSONResponse(status_code=500, content={'msg': "Невідома помилка під час обробки запиту"})
+                raise HTTPException(status_code=500, detail="Невідома помилка під час обробки запиту")
             
             return JSONResponse(status_code=200, content={"msg": "Всі категорії були видаленні."})
         case _:
-            return JSONResponse(status_code=403, content={'msg': f"Невідомий тип для обробки запиту - {type}"})
+            raise HTTPException(status_code=403, detail=f"Невідомий тип для обробки запиту - {type}")

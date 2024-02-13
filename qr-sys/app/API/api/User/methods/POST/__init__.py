@@ -1,5 +1,6 @@
 from ......framework import app, db, t, jwt, recovery, send_mail, logger
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import HTTPException
 
 from .....ValidationModels.Register import RegisterUser
 from .....ValidationModels.Login import LoginByLP
@@ -30,7 +31,7 @@ async def register(data: RegisterUser) -> (RegisterResponseFail):
     """
 
     if await db.async_get_where(authefication, exp=authefication.c.email == data.email, all_=False):
-        return JSONResponse(status_code=403, content={'msg': f"{data.email} вже зареєстрований"})
+        raise HTTPException(status_code=403, detail=f"{data.email} вже зареєстрований")
     
     hashf = t.get_hash(data.email + data.password)
     password = t.get_hash(data.password)
@@ -84,7 +85,7 @@ async def login(data: LoginByLP) -> RegisterResponseFail:
 
         return response
     
-    return JSONResponse(status_code=403, content={"msg": f"{email} користувач відсутній в системі або хибний пароль"})
+    raise HTTPException(status_code=403, detail=f"{email} користувач відсутній в системі або хибний пароль")
 
 
 @app.post('/api/admin/set/recovery/code', tags=[USER, EMAIL])
@@ -101,10 +102,10 @@ async def set_recovery_code(data: RecoverySetCode) -> RegisterResponseFail:
                                               all_=False, to_dict=True)
     except Exception as e:
         logger.error(f"Помилка під час отримання емейлу для відновлення паролю.\n\nEmail: {email}\nError: {e}")
-        return JSONResponse(status_code=400, content={"msg": "Помилка під час пошуку користувача"})
+        raise HTTPException(status_code=400, detail="Помилка під час пошуку користувача")
     
     if find_user is None:
-        return JSONResponse(status_code=400, content={"msg": "Користувч відстуній в системі"})
+        raise HTTPException(status_code=400, detail="Користувч відстуній в системі")
 
     find_user = find_user["email"] 
     code = recovery.set_code()
@@ -119,7 +120,7 @@ async def set_recovery_code(data: RecoverySetCode) -> RegisterResponseFail:
     except Exception as e:
         del recovery[find_user]
         logger.error(f"Помилка під час відправки email.\n\nEmail: {find_user}\nError: {e}")
-        return JSONResponse(status_code=500, content={"msg": "Невідома помилка під час обробки транзакії"})
+        raise HTTPException(status_code=500, detail="Невідома помилка під час обробки транзакії")
 
 
 @app.post("/api/admin/recovery/code/check", tags=[USER])
@@ -135,10 +136,10 @@ async def recovery_code_check(data: Recovery) -> (ResponseCheckRecovery | Regist
                                               all_=False, to_dict=True)
     except Exception as e:
         logger.error(f"Помилка під час отримання емейлу для відновлення паролю.\n\nEmail: {email}\nError: {e}")
-        return JSONResponse(status_code=400, content={"msg": "Помилка під час пошуку користувача"})
+        raise HTTPException(status_code=400, detail="Помилка під час пошуку користувача")
     
     if find_user is None:
-        return JSONResponse(status_code=400, content={"msg": "Користувч відстуній в системі"})
+        raise HTTPException(status_code=400, detail="Користувч відстуній в системі")
     
     user_id = find_user["id"]
     find_user = find_user["email"] 
@@ -147,4 +148,4 @@ async def recovery_code_check(data: Recovery) -> (ResponseCheckRecovery | Regist
         del recovery[find_user]
         return JSONResponse(status_code=200, content={"msg": "Код дійсний.", "id": user_id})
     
-    return JSONResponse(status_code=403, content={"msg": "Введений код не дійсний"})
+    raise HTTPException(status_code=403, detail="Введений код не дійсний")

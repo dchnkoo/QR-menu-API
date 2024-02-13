@@ -1,5 +1,6 @@
 from ......framework import app, jwt_validation, db, logger
 from fastapi.responses import JSONResponse
+from fastapi.exceptions import HTTPException
 from fastapi import Depends
 
 from .....ResponseModels.Register import RegisterResponseFail
@@ -22,6 +23,6 @@ async def delete_user(hashf: str = Depends(jwt_validation)) -> RegisterResponseF
     try: await db.async_delete_data(authefication, exp=authefication.c.hashf == hashf)
     except Exception as e:
         logger.error(f"Помилка під час видалення користувача\n\nhashf: {hashf}\nError: {e}")
-        return JSONResponse(status_code=500, content={"msg": "Невідома помилка під час виконання операції"})
+        raise HTTPException(status_code=500, detail="Невідома помилка під час виконання операції")
     
     return JSONResponse(status_code=200, content={"msg": "Користувача видаленно з системи"})
