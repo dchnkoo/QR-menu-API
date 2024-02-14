@@ -9,6 +9,7 @@ class RestaurantData(BaseModel):
     end_day: str = None
     start_time: str = None
     end_time: str = None
+    logo: str = None
 
 
 class RestaurantResponseSucces(BaseModel):

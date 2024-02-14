@@ -6,7 +6,7 @@ import os
 BASE_DIR = Path(__file__).parent.parent
 
 # for peoduction set DEBUG = False
-DEBUG = False
+DEBUG = True
 
 # DATABASE
 DATABASE="postgresql+asyncpg://test:test@localhost:5435/test"
@@ -72,3 +72,8 @@ TABLES_PER_PAGE = 10
 MAX_WIDTH = 300
 MAX_HEIGHT = 300
 
+    # LOGO for QR-code
+QR_LOGO_WIDTH = 130
+QR_LOGO_HEIGHT = 130
+
+LOGO_OVRL = QR_LOGO_WIDTH + 20

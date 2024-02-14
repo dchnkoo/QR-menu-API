@@ -1,0 +1,5 @@
+2024-02-14 23:27:24,872 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK"
+2024-02-14 23:27:24,875 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK"
+2024-02-14 23:27:24,878 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK"
+2024-02-14 23:27:24,882 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK"
+2024-02-14 23:27:24,884 - INFO: HTTP Request: POST http://test/api/admin/send_email "HTTP/1.1 200 OK"

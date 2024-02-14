@@ -1,25 +1,74 @@
 from ....database.db.models import sync, _async
 
-from ....settings import DOMAIN, TABLES_PER_PAGE, logger
+from ....settings import DOMAIN, TABLES_PER_PAGE, QR_LOGO_HEIGHT, QR_LOGO_WIDTH, LOGO_OVRL, logger
 from ....database.tables import tables
 
+from ...image.object import image
+
+from PIL import Image
 import pyqrcode
 
 
-class QR:
+class QR(image):
 
-    def _qr(self, restaurant: str, id: int, table: int) -> str:
+    def setup_logo_for_qr(self, logo: str, bg_rgb: tuple[int]) -> Image:
+        lg = self.make_round(
+            self.image_to_base64(
+                self.resize_image(
+                    self.str_to_base64(logo), QR_LOGO_WIDTH, QR_LOGO_HEIGHT
+                )
+            )
+        )
+
+        logo_bg = self.make_rounded_image(bg_rgb, LOGO_OVRL)
+
+        coordinates = self.get_center_coordinates(lg, logo_bg)
+
+        logo_bg.paste(lg, coordinates, lg)
+
+        return self.image_to_base64(logo_bg)
+
+    def paste_logo_in_qr(self, logo: bytes, QR: bytes):
+        lg = self.open_bytes_image(logo)
+        qr = self.open_bytes_image(QR)
+
+        lg = lg.convert("RGBA")
+        qr = qr.convert("RGBA")
+
+        coordinates = self.get_center_coordinates(lg, qr)
+
+        qr.paste(lg, coordinates, lg)
+
+        return self.image_to_base64(qr)
+
+
+    def _qr(self, restaurant: str, id: int, table: int, *args) -> str:
         url = f"{DOMAIN}/menu/{restaurant}?id={id}&table={table}"
+        
+        logo, bg, fill = args
+
 
         qr = pyqrcode.QRCode(url, version=6)
-        return qr.png_as_base64_str(scale=10, quiet_zone=2), url
+        qr = self.str_to_base64(qr.png_as_base64_str(scale=10, quiet_zone=2,
+                                                     module_color=fill, background=bg))
+        
+        if logo:
+            qr = self.paste_logo_in_qr(logo, qr)
+        
+        return self.base64_to_str(qr), url
 
 
-    def generate(self, restaurant: str, id: int, tables_: int) -> None:
+    def generate(self, restaurant: str, id: int, tables_: int, *args) -> None:
         db = sync.sync_db()
-    
+
+        logo, bg_rgb, fill = args
+
+        if logo:
+            logo = self.setup_logo_for_qr(logo, bg_rgb)
+
+
         for i in range(1, tables_ + 1):
-            qr, url = self._qr(restaurant, id, i)
+            qr, url = self._qr(restaurant, id, i, logo, bg_rgb, fill)
 
             data = {
                 'menu_link': url,
