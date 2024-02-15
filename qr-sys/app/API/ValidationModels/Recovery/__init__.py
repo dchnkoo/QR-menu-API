@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class RecoverySetCode(BaseModel):
@@ -9,5 +9,6 @@ class Recovery(BaseModel):
     code: str
 
 class RecoveryPassword(BaseModel):
-    id: int
-    password: str
+    id: int = Field(..., 
+                    description="id користувача яке отримали після успішної перевірки коду")
+    password: str = Field(..., description="Новий пароль для користувача")

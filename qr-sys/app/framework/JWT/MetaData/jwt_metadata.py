@@ -1,6 +1,11 @@
-from typing import Any
-from ...redis import re
+from ...redis import get_redis_connection
+from ....settings import REDIS_DB, DEBUG
 
+from typing import Any
+import os
+
+
+re = get_redis_connection(REDIS_DB if DEBUG else os.environ.get("REDIS_DB"))
 
 class JWTMetaData:
 
@@ -13,7 +18,7 @@ class JWTMetaData:
     def __getitem__(self, __name: str) -> Any:
         hashf = re.get(__name)
 
-        return hashf.decode("utf-8")
+        return hashf.decode()
 
     def __delitem__(self, __name: str) -> None:
         re.delete(__name)

@@ -6,7 +6,7 @@ import os
 BASE_DIR = Path(__file__).parent.parent
 
 # for peoduction set DEBUG = False
-DEBUG = True
+DEBUG = False
 
 # DATABASE
 DATABASE="postgresql+asyncpg://test:test@localhost:5435/test"
@@ -26,12 +26,6 @@ SENDER_PASSWORD = ...
 
 # DOMAIN - USE FOR QR-codes GENERATE
 DOMAIN = "http://qrsystem.source.com"
-
-
-# JWT
-from random import randint
-
-SECRET_KEY = "".join([chr(randint(33, 125)) for _ in range(70)])
 
 
 # LOGGNIG

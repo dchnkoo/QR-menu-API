@@ -1,10 +1,10 @@
+from ...settings import REDIS_PORT, DEBUG, REDIS_HOST
+
 import redis
 import os
 
-from ...settings import REDIS_PORT, DEBUG, REDIS_HOST, REDIS_DB
 
-re = redis.Redis(
-    host=REDIS_HOST if DEBUG else os.environ.get("REDIS_HOST"),
-    port=REDIS_PORT if DEBUG else int(os.environ.get("REDIS_PORT")),
-    db=REDIS_DB if DEBUG else int(os.environ.get("REDIS_DB"))
-)
+def get_redis_connection(db: int):
+    return redis.from_url(
+        f"redis://{REDIS_HOST if DEBUG else os.environ.get('REDIS_HOST')}:{REDIS_PORT if DEBUG else os.environ.get('REDIS_PORT')}/{db}"
+    )

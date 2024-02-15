@@ -20,6 +20,11 @@ async def delete_user_from_session():
 
 @app.delete('/api/admin/delete/user', tags=[USER])
 async def delete_user(hashf: str = Depends(jwt_validation)) -> RegisterResponseFail:
+
+    """
+    <h1>Повністью видаляє користувача з системи</h1>
+    """
+
     try: await db.async_delete_data(authefication, exp=authefication.c.hashf == hashf)
     except Exception as e:
         logger.error(f"Помилка під час видалення користувача\n\nhashf: {hashf}\nError: {e}")

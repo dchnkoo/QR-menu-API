@@ -47,8 +47,6 @@ async def get_full_info_categories(hashf: str = Depends(jwt_validation)):
     
     category = await db.async_get_where(categories, exp=categories.c.restaurant_id == restaurant_id,
                                         to_dict=True)
-    
-    info = {"restaurant": restaurant_ | {"categories": category}}
 
     if category:
         dishes_data = await db.async_get_where(dishes, exp=dishes.c.restaurant_id == restaurant_id,
@@ -56,24 +54,11 @@ async def get_full_info_categories(hashf: str = Depends(jwt_validation)):
         
         ingredients_data = await db.async_get_where(ingredients, exp=ingredients.c.restaurant_id == restaurant_id,
                                                     to_dict=True)
-        
-        for i in range(len(category)):
-            category_id = category[i]["id"]
-            category[i]["dishes"] = []
-            
-            for j in range(len(dishes_data)):
-                category_dish_id = dishes_data[j]["category_id"]
-                dishes_data[j]["ingredients"] = []
 
-                if category_id == category_dish_id:
-                    category[i]["dishes"].append(dishes_data[j])
+        category = list(map(lambda x: {**x, "dishes": [{**i, "ingredients": [j for j in ingredients_data if i["id"] == j["dish_id"]]} 
+                                                       for i in dishes_data if i["category_id"] == x["id"]]}, category))
 
-                for l in range(len(ingredients_data)):
 
-                    dish_id = dishes_data[j]["id"]
-                    ingredients_id = ingredients_data[l]["dish_id"]
-
-                    if dish_id == ingredients_id:
-                        dishes_data[j]["ingredients"].append(ingredients_data[l])
-
+    info = {"restaurant": restaurant_ | {"categories": category}}
+    
     return JSONResponse(status_code=200, content=info)

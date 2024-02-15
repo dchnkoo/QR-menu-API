@@ -1,11 +1,13 @@
-import jwt
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from ..MetaData.jwt_metadata import JWTMetaData 
+import jwt
 
+from ...redis import get_redis_connection
+from ....settings import REDIS_DB, logger
 import datetime
-import pytz
 
-from ....settings import SECRET_KEY, logger
+
+SECRET_KEY = get_redis_connection(REDIS_DB + 2).get("SECRET_KEY").decode()
 
 
 class JWT:
