@@ -24,9 +24,9 @@ services:
   
   api:
     container_name: qrmenu
-    image: dchnkoo/qr-sys
     build: 
       context: ./qr-sys
+    image: dchnkoo/qr-sys
     command: ["./app.sh"]
     env_file:
       - qr-sys/.env
@@ -35,6 +35,18 @@ services:
     depends_on:
       - db
       - re
+
+  keysetter:
+    container_name: key
+    image: dchnkoo/secret-setter
+    build: 
+      context: ./qr-sys
+    command: ["python3", "-m", "app.SECRET_KEY.generate", "--set-secret"]
+    env_file:
+      - qr-sys/.env
+    depends_on:
+      - re
+  
 
   celery:
     build: 

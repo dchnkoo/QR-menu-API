@@ -35,10 +35,17 @@ user@~: celery --app=app.framework.celery.object:celery worker -l INFO
 user@~: celery --app=app.framework.celery.object:celery flower
 ```
 
-7. DEBUG = False тільки якщо для запуску продакшн середовища через
+7. Генерація секретного ключа для JWT токенів
+
+```bash
+user@~: python3 -m app.SECRET_KEY.generate --set-secret
+```
+
+
+8. DEBUG = False тільки якщо для запуску продакшн середовища через
    docker-compose.yml, для середовища розробки DEBUG = True.
  
-8. Запуск додатку
+9. Запуск додатку
 
 ```bash
 user@~: uvicorn app.API.api:app --host:<host> --port:<port>
