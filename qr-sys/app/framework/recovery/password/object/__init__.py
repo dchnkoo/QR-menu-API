@@ -1,20 +1,24 @@
 from typing import Any
 from random import choice
 
+from ....redis import get_redis_connection
+from .....settings import REDIS_DB, DEBUG
+import os
+
 
 class recovery_codes:
 
     def __init__(self) -> None:
-        self.code = {}
+        self.code = get_redis_connection(REDIS_DB + 3 if DEBUG else int(os.environ.get("REDIS_DB")) + 3)
 
     def set_code(self) -> str:
         return "".join([str(choice(range(10))) for _ in range(6)])
 
     def __setitem__(self, key: Any, value: Any) -> None:
-        self.code[key] = value
+        self.code.set(key, value)
 
     def __delitem__(self, key: Any) -> None:
-        del self.code[key]
+        self.code.delete(key)
 
     def __getitem__(self, key: Any) -> Any:
-        return self.code[key]
+        return self.code.get(key).decode()
