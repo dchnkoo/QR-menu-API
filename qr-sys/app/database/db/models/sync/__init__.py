@@ -88,7 +88,7 @@ class sync_db:
             if isinstance(result, list):
                 result = [i._asdict() for i in result]
             else:
-                result = result._asdict()
+                result = result._asdict() if result else None
 
         return result if not count_items else [result, count_items]
 

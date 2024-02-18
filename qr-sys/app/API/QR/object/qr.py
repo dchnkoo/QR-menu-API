@@ -67,8 +67,14 @@ class QR(image):
             logo = self.setup_logo_for_qr(logo, bg_rgb)
 
 
-        for i in range(1, tables_ + 1):
+        tables_count = db.get_where(tables, exp=tables.c.restaurant_id == id, 
+                                    all_=False, count=True, to_dict=True)
+
+        start = (tables_count[1] + 1) if tables_count else 1
+
+        for i in range(start, (start  + tables_)):
             qr, url = self._qr(restaurant, id, i, logo, bg_rgb, fill)
+
 
             data = {
                 'menu_link': url,
