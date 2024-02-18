@@ -9,7 +9,7 @@ services:
       - "6379:6379"
 
   db:
-    image: postgres:15
+    image: postgres
     restart: always 
     container_name: db
     command: -p 5435
