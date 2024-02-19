@@ -1,5 +1,4 @@
 from ......framework import app, logger, jwt_validation, db, t
-from ......settings import MAX_WIDTH, MAX_HEIGHT
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
@@ -26,12 +25,6 @@ async def restaurant_add(data: RestaurantRegister, hashf: str = Depends(jwt_vali
     """
 
     restaurant_data = data.model_dump()
-
-    if "logo" in restaurant_data and restaurant_data["logo"] is not None:
-        status, code, msg = t.check_images_size(restaurant_data["logo"], MAX_WIDTH, MAX_HEIGHT)
-
-        if status is False:
-            raise HTTPException(status_code=code, detail=msg)
 
     filter_data = restaurant_data | {'hashf': hashf}
 

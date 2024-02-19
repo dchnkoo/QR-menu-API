@@ -30,7 +30,7 @@ async def register(data: RegisterUser) -> (RegisterResponseFail):
 
     playload, date = jwt.get_playload(user[0], user[2], **{time['type']: time['number']})
     token = jwt.get_token(**playload)
-    jwt.save_token(token, user[1])
+    jwt.set(token, user[1])
 
     response = JSONResponse(status_code=200, content={"msg": "Користувача зарєстровано"})
     response.set_cookie(key="token", value=token, expires=date, httponly=True, secure=True, samesite="none")
@@ -51,7 +51,7 @@ async def login(data: LoginByLP) -> RegisterResponseFail:
     if user:
         playload, date = jwt.get_playload(user[0], user[2], **{time_type: time})
         token = jwt.get_token(**playload)
-        jwt.save_token(token, user[1])
+        jwt.set(token, user[1])
 
         response = JSONResponse(status_code=200, content={"msg": "Вхід в систему успішний"})
         response.set_cookie(key="token", value=token, expires=date, httponly=True, secure=True, samesite="none")

@@ -6,7 +6,7 @@ import os
 BASE_DIR = Path(__file__).parent.parent
 
 # for peoduction set DEBUG = False
-DEBUG = True
+DEBUG = False
 
 # DATABASE
 DATABASE="postgresql+asyncpg://test:test@localhost:5435/test"

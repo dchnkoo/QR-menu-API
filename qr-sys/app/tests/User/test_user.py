@@ -10,7 +10,7 @@ import httpx
 
 
 @pytest_asyncio.fixture(scope="module", params=users)
-async def register(client: httpx.AsyncClient, request, event_loop):
+async def register(client: httpx.AsyncClient, request):
     user = request.param
 
     status, response, token = await registration(client, user)

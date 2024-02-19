@@ -7,13 +7,10 @@ from ....settings import REDIS_DB, logger
 import datetime
 
 
-SECRET_KEY = get_redis_connection(REDIS_DB + 2).get("SECRET_KEY").decode()
+SECRET_KEY = get_redis_connection(REDIS_DB + 2).get("SECRET_KEY")
 
 
-class JWT:
-
-    def __init__(self) -> None:
-        self._token = JWTMetaData()
+class JWT(JWTMetaData):
 
     def get_playload(self, id: int, udata: str, **exp_time) -> dict:
         exp_utc = datetime.datetime.utcnow() + datetime.timedelta(**exp_time)
@@ -49,13 +46,3 @@ class JWT:
         except Exception as e:
             logger.error(f"Відсутній токен\n\nError: {e}")
             return [False, 'Відсутній токен']
-
-
-    def save_token(self, token: str, hashf: str) -> None:
-        self._token[token] = hashf
-
-    def delete_token(self, token) -> None:
-        del self._token[token]
-
-    def get_user_hash(self, token: str) -> str:
-        return self._token[token]

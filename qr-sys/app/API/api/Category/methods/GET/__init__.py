@@ -55,9 +55,17 @@ async def get_full_info_categories(hashf: str = Depends(jwt_validation)):
         ingredients_data = await db.async_get_where(ingredients, exp=ingredients.c.restaurant_id == restaurant_id,
                                                     to_dict=True)
 
-        category = list(map(lambda x: {**x, "dishes": [{**i, "ingredients": [j for j in ingredients_data if i["id"] == j["dish_id"]]} 
-                                                       for i in dishes_data if i["category_id"] == x["id"]]}, category))
+        category = [
+            {**i, "dishes": [
 
+                {**j, "ingredients": [
+            
+                    l for l in ingredients_data if j.get("id") == l.get("dish_id")
+            
+                ]} for j in dishes_data if j.get("category_id") == i.get("id")
+            
+            ]} for i in category
+        ]
 
     info = {"restaurant": restaurant_ | {"categories": category}}
     
