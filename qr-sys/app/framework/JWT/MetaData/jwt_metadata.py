@@ -21,8 +21,10 @@ class JWTMetaData(dict):
         """return List[...]"""
         return re.keys()
     
-    def set(self, __key: Any, __value: Any) -> None:
+    def set(self, __key: Any, __value: Any, expire: int = None) -> None:
         self.__setitem__(__key, __value)
+        if expire:
+            re.expire(__key, expire)
 
     def setdefault(self):
         raise Exception("Can't set default got JWTMetaData")

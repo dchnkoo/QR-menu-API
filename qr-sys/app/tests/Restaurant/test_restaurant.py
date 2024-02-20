@@ -29,26 +29,26 @@ async def setup_user(client: httpx.AsyncClient, request):
 async def test_register_restaurant_fail_cookie(client: httpx.AsyncClient):
     status, data = await register_restaurant(client, None, None)
 
-    assert status == 403 and ("detail" in data) is True
+    assert status == 401 and ("detail" in data) is True
 
 
 @pytest.mark.asyncio
 async def test_restaurant_update_fail(client: httpx.AsyncClient):
     request = await client.patch('/api/admin/update/restaurant')
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_restaurant_get_fail(client: httpx.AsyncClient):
     request = await client.get('/api/admin/get/restaurant')
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_restaurant_delete_fail(client: httpx.AsyncClient):
     status, data = await delete_resturant(client, None, cookies=False)
 
-    assert status == 403 and ("detail" in data) is True
+    assert status == 401 and ("detail" in data) is True
 
 @pytest.mark.asyncio
 async def test_register_restaurant(client: httpx.AsyncClient, setup_user: str):

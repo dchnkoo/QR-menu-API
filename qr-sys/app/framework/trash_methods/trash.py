@@ -29,7 +29,6 @@ class trash:
             logger.error(f"Помилка під час обробки логотипу\nError: {e}")
             return False, 400, "Неправильний формат логотипу, він повинен бути як base64 str"
         
-        print(image.size)
         if (sz := image.size) and sz[0] > width or sz[1] > height:
             return False, 413, f"Логотип перевищує задані параметри {width}x{height}"
         

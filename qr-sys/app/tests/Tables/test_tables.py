@@ -35,20 +35,20 @@ async def setup(client: httpx.AsyncClient, request):
 async def test_create_tables_fail(client: httpx.AsyncClient):
     request = await client.post("/api/admin/create/tables")
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 
 @pytest.mark.asyncio
 async def test_delete_table_fail(client: httpx.AsyncClient):
     request = await client.delete(f"/api/admin/delete/tables")
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_get_tables_fail(client: httpx.AsyncClient):
     request = await client.get("/api/admin/get/tables")
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 
 @pytest.mark.asyncio

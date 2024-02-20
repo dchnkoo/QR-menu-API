@@ -38,14 +38,14 @@ async def setup(client: httpx.AsyncClient, request):
 async def test_add_category_fail(client: httpx.AsyncClient):
     status, data = await add_category(client, None, cookies=False)
 
-    assert status == 403 and ("detail" in data) is True
+    assert status == 401 and ("detail" in data) is True
     
 
 @pytest.mark.asyncio
-@pytest.fixture(scope="function", params=[({"category": "Десерти", "color": "red"},
-                                        {"category": "Гарячі страви", "color": "blue"},
-                                        {"category": "Холодні страви", "color": "purple"},
-                                        {"category": "Напої", "color": "black"})])
+@pytest.fixture(scope="function", params=[({"category": "Десерти"},
+                                        {"category": "Гарячі страви"},
+                                        {"category": "Холодні страви"},
+                                        {"category": "Напої"})])
 async def add_category_fixture(client: httpx.AsyncClient, setup: str, request):
     data = request.param
 
@@ -63,19 +63,19 @@ async def add_category_fixture(client: httpx.AsyncClient, setup: str, request):
 async def test_get_categories_fail(client: httpx.AsyncClient):
     request = await client.get('/api/admin/get/categories')
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_get_full_categories_fail(client: httpx.AsyncClient):
     request = await client.get('/api/admin/get-full-info/categories')
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_delete_categories_fail(client: httpx.AsyncClient):
     request = await client.delete('/api/admin/delete/categories')
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_get_categories(client: httpx.AsyncClient, setup: str, add_category_fixture):

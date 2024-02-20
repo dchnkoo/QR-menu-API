@@ -28,9 +28,9 @@ async def register(data: RegisterUser) -> (RegisterResponseFail):
     time = get_data.pop('time')
     user = await db.async_insert_data(authefication, **get_data)
 
-    playload, date = jwt.get_playload(user[0], user[2], **{time['type']: time['number']})
+    playload, date, seconds = jwt.get_playload(user[0], user[2], **{time['type']: time['number']})
     token = jwt.get_token(**playload)
-    jwt.set(token, user[1])
+    jwt.set(token, user[1], seconds)
 
     response = JSONResponse(status_code=200, content={"msg": "Користувача зарєстровано"})
     response.set_cookie(key="token", value=token, expires=date, httponly=True, secure=True, samesite="none")
@@ -49,9 +49,9 @@ async def login(data: LoginByLP) -> RegisterResponseFail:
     
     # Якщо користувач присутній в бд тоді генеруємо новий токен зберігаємо та повертаємо дані
     if user:
-        playload, date = jwt.get_playload(user[0], user[2], **{time_type: time})
+        playload, date, seconds = jwt.get_playload(user[0], user[2], **{time_type: time})
         token = jwt.get_token(**playload)
-        jwt.set(token, user[1])
+        jwt.set(token, user[1], seconds)
 
         response = JSONResponse(status_code=200, content={"msg": "Вхід в систему успішний"})
         response.set_cookie(key="token", value=token, expires=date, httponly=True, secure=True, samesite="none")

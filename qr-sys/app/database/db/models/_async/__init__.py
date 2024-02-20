@@ -47,7 +47,8 @@ class async_db:
                 await transaction.commit()
             
             logger.info(f'insert {kwargs.keys()} into {instance}')
-            query = text(''.join([f"{instance.name}.{k}='{v}' AND " for k, v in kwargs.items() if v])[:-5])    
+            query = text(''.join([f"{instance.name}.{k}='{v}' AND " 
+                                  for k, v in kwargs.items() if v and isinstance(v, list) is False])[:-5])    
 
             return await self.async_get_where(instance, exp=query, all_=False) 
             

@@ -44,10 +44,10 @@ async def setup_retaurant(client: httpx.AsyncClient, setup_user: str):
 
 @pytest_asyncio.fixture(scope="module")
 async def setup_categories(client: httpx.AsyncClient, setup_retaurant: str):
-    categories = ({"category": "Десерти", "color": "red"},
-                {"category": "Гарячі страви", "color": "blue"},
-                {"category": "Холодні страви", "color": "purple"},
-                {"category": "Напої", "color": "black"})
+    categories = ({"category": "Десерти"},
+                {"category": "Гарячі страви"},
+                {"category": "Холодні страви"},
+                {"category": "Напої"})
     
     temp = []
     for i in categories:
@@ -114,19 +114,19 @@ async def add_ingredient_fixture(client: httpx.AsyncClient, setup_dishes: tuple[
 async def test_add_ingredient_fail(client: httpx.AsyncClient):
     request = await client.post("/api/admin/add/ingredient")
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_delete_ingredients_fail(client: httpx.AsyncClient):
     request = await client.delete("/api/admin/delete/ingredients")
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_get_ingredients_fail(client: httpx.AsyncClient):
     request = await client.get("/api/admin/get/ingredients")
 
-    assert request.status_code == 403 and ("detail" in request.json()) is True
+    assert request.status_code == 401 and ("detail" in request.json()) is True
 
 @pytest.mark.asyncio
 async def test_get_ingredients(client: httpx.AsyncClient, add_ingredient_fixture: tuple[str, list[dict]]):

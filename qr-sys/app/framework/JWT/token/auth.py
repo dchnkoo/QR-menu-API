@@ -18,7 +18,7 @@ class JWT(JWTMetaData):
             'user_id': id,
             'username': udata,
             'exp': exp_utc
-        }, exp_utc.strftime("%a, %d-%b-%Y %T GMT")
+        }, exp_utc.strftime("%a, %d-%b-%Y %T GMT"), int((exp_utc - datetime.datetime.utcnow()).total_seconds())
 
     
     def get_token(self, **playload) -> str:

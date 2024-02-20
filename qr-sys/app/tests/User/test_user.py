@@ -27,7 +27,7 @@ async def register(client: httpx.AsyncClient, request):
 async def test_login_by_token_fail(client: httpx.AsyncClient):
     status, _ = await login_by_token(client, "oueqwbfuoeqb")
 
-    assert status == 403
+    assert status == 401
 
 @pytest.mark.asyncio
 async def test_login_by_token_success(client: httpx.AsyncClient, register: str):

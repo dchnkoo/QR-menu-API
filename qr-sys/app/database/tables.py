@@ -1,6 +1,6 @@
 from .db.Meta.data import metadata
 from sqlalchemy import (Table, Column, Integer, String,
-                        ForeignKey, VARCHAR, BLOB)
+                        ForeignKey, VARCHAR, ARRAY)
 
 
 # create tables here 
@@ -36,7 +36,7 @@ categories = Table(
 
     Column('id', Integer, primary_key=True),
     Column('category', VARCHAR, nullable=False),
-    Column('color', VARCHAR),
+    Column('color', ARRAY(Integer)),
     Column('restaurant_id', Integer, ForeignKey('restaurant.id', ondelete='CASCADE'))
 )
 
