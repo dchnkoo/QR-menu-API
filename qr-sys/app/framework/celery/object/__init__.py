@@ -11,4 +11,4 @@ H = REDIS_HOST if DEBUG else env.get("REDIS_HOST")
 P = REDIS_PORT if DEBUG else env.get("REDIS_PORT")
 PASS = REDIS_PASSWORD if DEBUG else env.get("REDIS_PASSWORD")
 
-celery = Celery("tasks", broker=f"redis://:{PASS}@{H}:{P}/{D}")
+celery = Celery("tasks", broker=f"redis://:{PASS}@{H}:{P}/{D}", broker_connection_retry_on_startup=True)

@@ -1,9 +1,13 @@
-#!/bin/bash
+#! /bin/bash
 
-sleep 10
+sleep 5
+
+python3 -m app.SECRET_KEY.generate --set-secret
+
+sleep 5
 
 alembic revision --autogenerate
 
 alembic upgrade head
 
-gunicorn app.API.api:app --workers 4 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8080
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf

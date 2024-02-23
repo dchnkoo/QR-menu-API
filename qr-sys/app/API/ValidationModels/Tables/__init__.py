@@ -1,9 +1,11 @@
 from pydantic import BaseModel, Field, validator
+from ....settings import TABLES_PER_TRANSACTION
+
 from typing import Tuple
 
 
 class CreateTable(BaseModel):
-    table_number: int = 1
+    table_number: int = Field(1, ge=1, le=TABLES_PER_TRANSACTION, description=f"За одну транзацію можливо згенерувати максимум {TABLES_PER_TRANSACTION} столів")
     background: Tuple[int, int, int] = Field(default=(255, 255, 255),
                                             description="RGB value",
                                             min_length=3, max_length=3)

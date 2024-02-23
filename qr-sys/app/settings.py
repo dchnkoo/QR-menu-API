@@ -63,6 +63,9 @@ app.add_middleware(
     # Tables per page
 TABLES_PER_PAGE = 10
 
+    # Tables per transaction
+TABLES_PER_TRANSACTION = 100
+
     # LOGO
 MAX_WIDTH = 300
 MAX_HEIGHT = 300
@@ -74,7 +77,6 @@ QR_LOGO_HEIGHT = 130
 LOGO_OVRL = QR_LOGO_WIDTH + 20
 
     # Dishes image
-
 DISHES_IMG = 150
 
 

@@ -25,51 +25,12 @@ services:
   
   api:
     container_name: qrmenu
-    build: 
-      context: ./qr-sys
     image: dchnkoo/qr-sys
-    command: ["./app.sh"]
     env_file:
       - qr-sys/.env
     ports:
       - "8000:8080"
+      - "5555:5555"
     depends_on:
       - db
       - re
-
-  keysetter:
-    container_name: key
-    image: dchnkoo/secret-setter
-    build: 
-      context: ./qr-sys
-    command: ["python3", "-m", "app.SECRET_KEY.generate", "--set-secret"]
-    env_file:
-      - qr-sys/.env
-    depends_on:
-      - re
-  
-
-  celery:
-    build: 
-      context: ./qr-sys
-    image: dchnkoo/celery
-    container_name: celery
-    command: ["./celery.sh", "celery"]
-    env_file:
-      - qr-sys/.env
-    depends_on:
-      - re
-
-  flower:
-    build: 
-      context: ./qr-sys
-    image: dchnkoo/flower
-    container_name: flower
-    command: ["./celery.sh", "flower"]
-    env_file:
-      - qr-sys/.env
-    depends_on:
-      - re
-      - celery
-    ports:
-      - "5555:5555"

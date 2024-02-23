@@ -1,4 +1,4 @@
-from ...settings import REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, REDIS_DB, DEBUG
+from app.settings import REDIS_HOST, REDIS_PASSWORD, REDIS_PORT, REDIS_DB, DEBUG
 import os
 
 from random import randint
