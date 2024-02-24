@@ -14,7 +14,7 @@ from .....tags import CATEGORY
 async def delete_categories(type: str = "category", category_id: int = 0, hashf: str = Depends(jwt_validation)) -> RegisterResponseFail:
 
     """
-    <h3>Видалення категорії аналогічно як зі столами також можете вказати "all" або конкретний id категорії</h3>
+    <h3>Видалення категорії аналогічно як зі столами також можете вказати "all" або "category" та конкретний id категорії</h3>
     
     """
 
@@ -37,6 +37,7 @@ async def delete_categories(type: str = "category", category_id: int = 0, hashf:
                 raise HTTPException(status_code=500, detail="Невідома помилка під час обробки запиту")
 
             return JSONResponse(status_code=200, content={'msg': f'Категорія id: {category_id} була видаленна з системи'})
+        
         case "all":
             try: await db.async_delete_data(categories, exp=categories.c.restaurant_id == restaurant_id)
             except Exception as e:

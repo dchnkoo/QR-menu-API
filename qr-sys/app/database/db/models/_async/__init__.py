@@ -11,6 +11,7 @@ from typing import Any, Tuple
 
 
 class async_db:
+    """Асинхрона модель взаємодії з базою данних"""
 
     def __init__(self) -> None:
         self._session = sessionmaker(
@@ -36,7 +37,7 @@ class async_db:
         return self._session()
 
 
-    async def async_insert_data(self, instance: object, get_data: bool = True, **kwargs):
+    async def async_insert_data(self, instance: object, **kwargs):
         if self._check_obj_instance(instance):
             
             session = await self.get_async_session()

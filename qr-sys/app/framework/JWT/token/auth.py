@@ -12,7 +12,12 @@ SECRET_KEY = get_redis_connection(REDIS_DB + 2).get("SECRET_KEY")
 
 class JWT(JWTMetaData):
 
-    def get_playload(self, id: int, udata: str, **exp_time) -> dict:
+    def get_playload(self, id: int, udata: str, **exp_time):
+        """
+        Створення обьєкту для генерування токену, також повертає 
+        дату до котрої він буде дійсний в UTC форматі та кількість секунд
+        до кінця його життя
+        """
         exp_utc = datetime.datetime.utcnow() + datetime.timedelta(**exp_time)
         return {
             'user_id': id,
@@ -22,6 +27,9 @@ class JWT(JWTMetaData):
 
     
     def get_token(self, **playload) -> str:
+        """
+        Створити токен
+        """
         token = jwt.encode(playload, 
                            SECRET_KEY,
                            algorithm='HS256')
@@ -30,6 +38,7 @@ class JWT(JWTMetaData):
         return token
 
     def check_token(self, token: jwt) -> list[bool, dict | str, str]:
+        """Перевірка дісйність токену"""
         try:
             check = jwt.decode(token, SECRET_KEY, algorithms=['HS256'])
             logger.info(f"token {token[:10]} is valid")

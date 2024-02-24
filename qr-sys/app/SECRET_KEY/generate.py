@@ -21,6 +21,7 @@ def set_secret():
 
     re.set("SECRET_KEY", SECRET_KEY)
 
+    print("KEY SET SUCCESFULY")
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--set-secret", action=set_secret())

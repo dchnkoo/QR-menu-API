@@ -9,6 +9,7 @@ from .....settings import logger
 
 
 class sync_db:
+    """Синхрона взаємодія з базою данних"""
 
     def err(self, msg) -> ValueError:
         logger.error(f'{msg} is not instance of sqlalchemy.sql.schema.Table')

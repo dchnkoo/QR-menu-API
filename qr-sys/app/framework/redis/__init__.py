@@ -8,6 +8,7 @@ import os
 env = os.environ
 
 def get_redis_connection(db: int) -> redis.Redis:
+    """Отримати підключення до redis"""
     return redis.Redis(
         password=REDIS_PASSWORD if DEBUG else env.get("REDIS_PASSWORD"),
         host=REDIS_HOST if DEBUG else env.get('REDIS_HOST'),

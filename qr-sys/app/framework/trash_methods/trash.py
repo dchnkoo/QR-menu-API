@@ -13,15 +13,18 @@ class trash:
     """Цей обьект для мусорних методів в цьому додатку"""
 
     def get_hash(self, string: str) -> str:
+        """Перетворює str в hash"""
         h = hashlib.sha256(string.encode()).hexdigest()
         logger.info(f"{h[:10]} hash created")
         return h
     
     def parse_user_data(self, data: dict) -> dict:
+        """Парсить обьєкт щоб прибрати з нього конфіденціїні дані"""
         return {k: v for k, v in data.items() if k not in ['password', 'hashf', 'token'] and v is not None}
     
     @staticmethod
     def check_images_size(image: ByteString, width: str, height: str):
+        """Метод перевіряє розмір зображення, аргумент повинен бути закодований в base64 та мати тип данних str"""
         try:
             image_decode = base64.b64decode(image)
             image = Image.open(BytesIO(image_decode))

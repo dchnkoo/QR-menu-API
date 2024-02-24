@@ -7,13 +7,14 @@ from ....settings import (SENDER_EMAIL, SENDER_PASSWORD,
                           SMTP_PORT, SMTP_SERVER, DEBUG, logger)
 
 
-
+# Якщо DEBUG буде False тоді значення будуть братись з середовища докер контейнеру
 EMAIL = SENDER_EMAIL if DEBUG else os.environ.get("SENDER_EMAIL") if "SENDER_EMAIL" in os.environ.keys() else None 
 PASS = SENDER_PASSWORD if DEBUG else os.environ.get("SENDER_PASSWORD") if "SENDER_PASSWORD" in os.environ.keys() else None 
 PORT = SMTP_PORT if DEBUG else os.environ.get("SMTP_PORT") if "SMTP_PORT" in os.environ.keys() else None 
 SERVER = SMTP_SERVER if DEBUG else os.environ.get("SMTP_SERVER") if "SMTP_SERVER" in os.environ.keys() else None 
 
 def setup_message(*args):
+    """Створення повідомлення для відправки"""
     e, s, b = args
 
     msg = m.MIMEMultipart()
