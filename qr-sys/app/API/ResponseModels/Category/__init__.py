@@ -10,5 +10,4 @@ class CategoryTable(BaseModel):
 
 
 class GetCategories(BaseModel):
-    status: int
     categories: List[CategoryTable]

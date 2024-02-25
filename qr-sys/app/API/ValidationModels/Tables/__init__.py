@@ -1,7 +1,8 @@
 from pydantic import BaseModel, Field, validator
-from ....settings import TABLES_PER_TRANSACTION
-
 from typing import Tuple
+from enum import Enum
+
+from ....settings import TABLES_PER_TRANSACTION
 
 
 class CreateTable(BaseModel):
@@ -21,9 +22,7 @@ class CreateTable(BaseModel):
             raise ValueError("RGB values must be beetwen 0 and 255")
         return value
 
-class DelDataValidationA(BaseModel):
-    type: str
 
-class DelDataValidationB(BaseModel):
-    type: str
-    table_number: int
+class DeleteType(str, Enum):
+    all = "all"
+    table = "table"

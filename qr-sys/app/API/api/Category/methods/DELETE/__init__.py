@@ -4,6 +4,7 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
+from .....ValidationModels.Category import CategoryDelType
 from .....ResponseModels.Register import RegisterResponseFail
 
 from ......database.tables import (restaurant, categories)
@@ -11,7 +12,7 @@ from .....tags import CATEGORY
 
 
 @app.delete('/api/admin/delete/categories', tags=[CATEGORY])
-async def delete_categories(type: str = "category", category_id: int = 0, hashf: str = Depends(jwt_validation)) -> RegisterResponseFail:
+async def delete_categories(type: CategoryDelType, category_id: int = 0, hashf: str = Depends(jwt_validation)) -> RegisterResponseFail:
 
     """
     <h3>Видалення категорії аналогічно як зі столами також можете вказати "all" або "category" та конкретний id категорії</h3>

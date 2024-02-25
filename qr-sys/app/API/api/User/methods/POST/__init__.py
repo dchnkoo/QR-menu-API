@@ -41,13 +41,11 @@ async def register(data: RegisterUser) -> (RegisterResponseFail):
 @app.post("/api/admin/login", tags=[USER])
 async def login(data: LoginByLP) -> RegisterResponseFail:
 
-    email, password, time_type, time = data.email, data.password, data.time.type, data.time.number
+    email, password, time_type, time = data.email, t.get_hash(data.password), data.time.type, data.time.number
     user = await db.async_get_where(authefication, exp=authefication.c.email == email, all_=False, to_dict=True)
 
     if user is None:
         raise HTTPException(status_code=403, detail=f"{email} користувач відсутній")
-
-    password = t.get_hash(password)
 
     if password != user.get("password"):
         raise HTTPException(status_code=403, detail=f"Хибний пароль для {email}")

@@ -5,12 +5,13 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
+from .....ValidationModels.Tables import DeleteType
 from .....ResponseModels.Register import RegisterResponseFail
 from .....tags import TABLES
 
 
 @app.delete('/api/admin/delete/tables', tags=[TABLES])
-async def delete_tables(type: str = "all", table_number: int = 0, hashf: str = Depends(jwt_validation)) -> RegisterResponseFail:
+async def delete_tables(type: DeleteType, table_number: int = 0, hashf: str = Depends(jwt_validation)) -> RegisterResponseFail:
 
     """
     

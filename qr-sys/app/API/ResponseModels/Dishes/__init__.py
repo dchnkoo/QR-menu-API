@@ -1,15 +1,11 @@
 from pydantic import BaseModel
 from typing import List
 
+from ...ValidationModels.Dishes import Dish
 
-class Dish(BaseModel):
+
+class DishResponse(Dish):
     id: int
-    img: str = ''
-    name: str
-    price: int
-    weight: int
-    comment: str = ''
-    category_id: int
-
+    
 class DishResponseList(BaseModel):
     data: List[Dish]

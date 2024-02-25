@@ -1,4 +1,5 @@
 from pydantic import BaseModel, Field, validator
+from enum import Enum
 
 from random import randint
 from typing import Tuple
@@ -16,10 +17,6 @@ class CategorySet(BaseModel):
             raise ValueError("RGB values must be beetwen 0 and 255")
         return value
 
-
-class CategoryAll(BaseModel):
-    type: str = 'all'
-
-class CategoryId(BaseModel):
-    type: str = "category"
-    category_id: int 
+class CategoryDelType(str, Enum):
+    all = "all"
+    category = "category"
