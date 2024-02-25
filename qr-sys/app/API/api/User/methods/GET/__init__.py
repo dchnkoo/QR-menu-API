@@ -51,7 +51,11 @@ async def get_full_info_from_user(hashf: str = Depends(jwt_validation)):
                                      table_2exp=restaurant.c.hashf == hashf, 
                                      exp=authefication.c.hashf == hashf)
     
-    restaurant_id = from_user["restaurant"]["id"] if "restaurant" in from_user else None
+    restaurant_id = from_user["restaurant"]["id"] if "restaurant" in from_user else HTTPException(status_code=400, 
+                                                                                                  detail="Потрібно зарєструвати заклад для виконання цього запиту")
+
+    if isinstance(restaurant_id, HTTPException):
+        raise restaurant_id
 
     from_restaurant = await db.async_get_where(categories, exp=categories.c.restaurant_id == restaurant_id, 
                                                to_dict=True)
@@ -64,6 +68,4 @@ async def get_full_info_from_user(hashf: str = Depends(jwt_validation)):
         from_user["restaurant"]["categories"] = from_restaurant
         from_user["restaurant"]["tables"] = table_count[1] if table_count else 0
     
-    result = from_user if from_user else {'details': "Відстунє достатньо інформації"}
-
-    return JSONResponse(status_code=500 if "details" in result else 200, content=result)
+    return JSONResponse(status_code=200, content=from_user)

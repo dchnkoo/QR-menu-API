@@ -1,12 +1,12 @@
 from ....database.db.models import sync, _async
 
-from ....settings import DOMAIN, TABLES_PER_PAGE, QR_LOGO_HEIGHT, QR_LOGO_WIDTH, LOGO_OVRL, logger
+from ....settings import DOMAIN, DEBUG, TABLES_PER_PAGE, QR_LOGO_HEIGHT, QR_LOGO_WIDTH, LOGO_OVRL, logger
 from ....database.tables import tables
 
 from ...image.object import image
 
 from PIL import Image
-import pyqrcode
+import pyqrcode, os
 
 
 class QR(image):
@@ -43,12 +43,12 @@ class QR(image):
 
 
     def _qr(self, restaurant: str, id: int, table: int, *args) -> str:
-        url = f"{DOMAIN}/menu/{restaurant}?id={id}&table={table}"
+        domain = DOMAIN if DEBUG else os.environ.get('QR_DOMAIN')
+        url = f"{domain}/menu/{restaurant}?id={id}&table={table}"
         
         logo, bg, fill = args
 
-
-        qr = pyqrcode.QRCode(url, version=6)
+        qr = pyqrcode.QRCode(url)
         qr = self.str_to_base64(qr.png_as_base64_str(scale=10, quiet_zone=2,
                                                      module_color=fill, background=bg))
         

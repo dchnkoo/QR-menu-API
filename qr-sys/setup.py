@@ -1,4 +1,4 @@
-import re, subprocess, os
+import re, os
 from app.settings import (DEBUG, REDIS_PORT, REDIS_PASSWORD,
                           DATABASE)
 

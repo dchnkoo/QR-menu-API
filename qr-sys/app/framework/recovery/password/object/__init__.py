@@ -23,4 +23,4 @@ class recovery_codes:
         code.delete(key)
 
     def __getitem__(self, key: Any) -> Any:
-        return code.get(key).decode()
+        return code.get(key)

@@ -56,15 +56,15 @@ async def get_full_info_categories(hashf: str = Depends(jwt_validation)):
                                                     to_dict=True)
 
         category = [
-            {**i, "dishes": [
+            {**i, "dishes": [ # categories + dishes
 
-                {**j, "ingredients": [
+                {**j, "ingredients": [ # dishes + ingredients
             
-                    l for l in ingredients_data if j.get("id") == l.get("dish_id")
+                    l for l in ingredients_data if j.get("id") == l.get("dish_id") # validation if dishes["id"] == ingredients["dish_id"]
             
-                ]} for j in dishes_data if j.get("category_id") == i.get("id")
+                ]} for j in dishes_data if j.get("category_id") == i.get("id") # validation if dishes["category_id"] == category["id"]
             
-            ]} for i in category
+            ]} for i in category # iter in categories list[dict]
         ]
 
     info = {"restaurant": restaurant_ | {"categories": category}}

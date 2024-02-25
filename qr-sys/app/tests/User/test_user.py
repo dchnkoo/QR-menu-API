@@ -68,5 +68,5 @@ async def test_get_full_info_fail(client: httpx.AsyncClient, register: tuple):
     request = await client.get('/api/admin/get-full-info/user',
                          cookies=cookie)
     
-    assert request.status_code == 500
+    assert request.status_code == 400
 

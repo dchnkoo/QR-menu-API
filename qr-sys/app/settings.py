@@ -5,7 +5,7 @@ import os
 
 BASE_DIR = Path(__file__).parent.parent
 
-# for peoduction set DEBUG = False
+# for production set DEBUG = False
 DEBUG = False
 
 # DATABASE
