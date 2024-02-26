@@ -1,14 +1,12 @@
 from ......framework import app, jwt_validation, logger, db
+from .....ResponseModels.Register import RegisterResponseFail
+from .....ValidationModels.Category import CategoryDelType
+from ......database.tables import (restaurant, categories)
+from .....tags import CATEGORY
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
-
-from .....ValidationModels.Category import CategoryDelType
-from .....ResponseModels.Register import RegisterResponseFail
-
-from ......database.tables import (restaurant, categories)
-from .....tags import CATEGORY
 
 
 @app.delete('/api/admin/delete/categories', tags=[CATEGORY])
@@ -21,8 +19,8 @@ async def delete_categories(type: CategoryDelType, category_id: int = 0, hashf: 
 
     try: 
         restaurant_id = await db.async_get_where(restaurant.c.id, exp=restaurant.c.hashf == hashf, 
-                                    all_=False)
-        restaurant_id = restaurant_id[0]
+                                    all_=False, to_dict=True)
+        restaurant_id = restaurant_id.get("id")
 
     except Exception as e:
         logger.error(f"Помилка під час отримання id закладу\n\nhashf: {hashf}\n\nError: {e}")

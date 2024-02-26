@@ -5,7 +5,7 @@ services:
   re:
     image: redis
     container_name: re
-    command: redis-server --requirepass redistest
+    command: redis-server --requirepass testpass
     ports:
       - "6379:6379"
 

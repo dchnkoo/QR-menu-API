@@ -1,18 +1,14 @@
 from ......framework import app, jwt_validation, logger, db, qr
-
-from fastapi.exceptions import HTTPException
-from fastapi.responses import JSONResponse
-from fastapi import Depends
-
 from .....ResponseModels.Tables import GetTablesResponse
-from .....ResponseModels.Register import RegisterResponseFail
-
 from ......database.tables import restaurant
 from .....tags import TABLES
 
+from fastapi.exceptions import HTTPException
+from fastapi import Depends
+
 
 @app.get('/api/admin/get/tables', tags=[TABLES])
-async def get_tables(page: int = 1, hashf: str = Depends(jwt_validation)) -> (GetTablesResponse | RegisterResponseFail):
+async def get_tables(page: int = 1, hashf: str = Depends(jwt_validation)) -> GetTablesResponse:
     try: 
         restaurant_id = await db.async_get_where(restaurant.c.id, exp=restaurant.c.hashf == hashf,
                                     all_=False)

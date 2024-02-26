@@ -1,11 +1,10 @@
 from .....ResponseModels.Register import RegisterResponseFail
+from ......framework import app, send_mail, logger
 from .....ValidationModels.Email import EmailMsg
+from .....tags import EMAIL
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
-
-from ......framework import app, send_mail, logger
-from .....tags import EMAIL
 
 
 @app.post("/api/admin/send_email", tags=[EMAIL])

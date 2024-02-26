@@ -1,12 +1,11 @@
 from ...redis import get_redis_connection
-from ....settings import REDIS_DB, DEBUG
+from ....settings import REDIS_DB
 
-from functools import singledispatchmethod
 from typing import Any, List
 import os
 
 
-re = get_redis_connection(REDIS_DB if DEBUG else os.environ.get("REDIS_DB"))
+re = get_redis_connection(os.environ.get("REDIS_DB", REDIS_DB))
 
 class JWTMetaData(dict):
 

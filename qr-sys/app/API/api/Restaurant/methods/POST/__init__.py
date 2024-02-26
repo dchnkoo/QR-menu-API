@@ -1,20 +1,16 @@
+from .....ResponseModels.Restaurant import (RestaurantResponseSucces)
+from .....ValidationModels.Restaurant import RestaurantRegister
 from ......framework import app, logger, jwt_validation, db, t
+from ......database.tables import restaurant 
+from .....tags import RESTAURANT
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
-from .....ValidationModels.Restaurant import RestaurantRegister
-
-from .....ResponseModels.Restaurant import (RestaurantResponseSucces)
-from .....ResponseModels.Register import RegisterResponseFail
-
-from ......database.tables import restaurant 
-from .....tags import RESTAURANT
-
 
 @app.post('/api/admin/add/restaurant', tags=[RESTAURANT])
-async def restaurant_add(data: RestaurantRegister, hashf: str = Depends(jwt_validation)) -> (RestaurantResponseSucces | RegisterResponseFail):
+async def restaurant_add(data: RestaurantRegister, hashf: str = Depends(jwt_validation)) -> RestaurantResponseSucces:
 
     """
     

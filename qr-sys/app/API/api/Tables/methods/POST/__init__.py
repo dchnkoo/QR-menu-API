@@ -3,8 +3,8 @@ from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
-from .....ValidationModels.Tables import CreateTable
 from .....ResponseModels.Register import RegisterResponseFail
+from .....ValidationModels.Tables import CreateTable
 
 from ......database.tables import (restaurant)
 from .....tags import TABLES

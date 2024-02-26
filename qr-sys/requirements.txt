@@ -46,6 +46,7 @@ pydantic-extra-types==2.4.1
 pydantic-settings==2.1.0
 pydantic_core==2.14.6
 PyJWT==2.8.0
+pyngrok==7.1.2
 pypng==0.20220715.0
 PyQRCode==1.2.1
 pytest==7.4.4

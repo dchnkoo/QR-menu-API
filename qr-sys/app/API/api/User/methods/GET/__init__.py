@@ -5,7 +5,6 @@ from fastapi.exceptions import HTTPException
 from ......database.tables import (authefication, restaurant, 
                                    tables, categories)
 
-from .....ResponseModels.Register import RegisterResponseFail
 from .....ResponseModels.Login import SuccesLogin
 
 from fastapi import Depends
@@ -13,7 +12,7 @@ from .....tags import USER
 
 
 @app.get("/api/admin/login/token", tags=[USER])
-async def login_by_token(hashf: str = Depends(jwt_validation)) -> (SuccesLogin | RegisterResponseFail):
+async def login_by_token(hashf: str = Depends(jwt_validation)) -> SuccesLogin:
 
     """
     <h1>Логування в систему за допомогою JWT токену</h1>

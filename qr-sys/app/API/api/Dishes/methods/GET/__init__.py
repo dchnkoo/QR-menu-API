@@ -1,18 +1,15 @@
 from ......framework import app, jwt_validation, db, logger
+from .....ResponseModels.Dishes import DishResponseList
+from ......database.tables import dishes
+from .....tags import DISHES
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
-from .....ResponseModels.Dishes import DishResponseList
-from .....ResponseModels.Register import RegisterResponseFail
-
-from ......database.tables import dishes
-from .....tags import DISHES
-
 
 @app.get('/api/admin/get/dish', tags=[DISHES], dependencies=[Depends(jwt_validation)])
-async def get_dishes(category_id: int) -> (DishResponseList | RegisterResponseFail):
+async def get_dishes(category_id: int) -> DishResponseList:
     try: data = await db.async_get_where(dishes, exp=dishes.c.category_id == category_id, 
                                 to_dict=True)
     except Exception as e:

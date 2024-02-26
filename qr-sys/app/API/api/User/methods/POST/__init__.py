@@ -87,7 +87,7 @@ async def set_recovery_code(data: RecoverySetCode) -> RegisterResponseFail:
 
 
 @app.post("/api/admin/recovery/code/check", tags=[USER])
-async def recovery_code_check(data: Recovery) -> (ResponseCheckRecovery | RegisterResponseFail):
+async def recovery_code_check(data: Recovery) -> ResponseCheckRecovery:
 
     """
     <p>Метод перевіряє код який надіслав користувач та якщо код дійсний повертає стасус 200</p>

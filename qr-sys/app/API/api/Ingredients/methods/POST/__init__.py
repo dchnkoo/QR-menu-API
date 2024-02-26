@@ -1,20 +1,16 @@
+from .....ValidationModels.Ingredients import IngredientScheme
 from ......framework import app, jwt_validation, db, logger
+from ......database.tables import (restaurant, ingredients)
+from .....ResponseModels.Ingredients import Ingredient
+from .....tags import INGREDIENTS
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
-from .....ValidationModels.Ingredients import IngredientScheme
-
-from .....ResponseModels.Ingredients import Ingredient
-from .....ResponseModels.Register import RegisterResponseFail
-
-from ......database.tables import (restaurant, ingredients)
-from .....tags import INGREDIENTS
-
 
 @app.post('/api/admin/add/ingredient', tags=[INGREDIENTS])
-async def add_ingredient(data: IngredientScheme, hashf: str = Depends(jwt_validation)) -> (Ingredient | RegisterResponseFail):
+async def add_ingredient(data: IngredientScheme, hashf: str = Depends(jwt_validation)) -> Ingredient:
     dish_id = data.dish_id
 
     # отримуємо id ресторану

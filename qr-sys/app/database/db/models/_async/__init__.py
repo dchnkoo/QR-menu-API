@@ -37,7 +37,7 @@ class async_db:
         return self._session()
 
 
-    async def async_insert_data(self, instance: object, **kwargs):
+    async def async_insert_data(self, instance: object, to_dict: bool = False, **kwargs):
         if self._check_obj_instance(instance):
             
             session = await self.get_async_session()
@@ -51,7 +51,7 @@ class async_db:
             query = text(''.join([f"{instance.name}.{k}='{v}' AND " 
                                   for k, v in kwargs.items() if v and isinstance(v, list) is False])[:-5])    
 
-            return await self.async_get_where(instance, exp=query, all_=False) 
+            return await self.async_get_where(instance, exp=query, all_=False, to_dict=to_dict) 
             
         else:
             self.err(instance)
@@ -91,6 +91,7 @@ class async_db:
             else:
                 result = result._asdict() if result else None
         
+        print(result)
         return result if not count_items else [result, count_items]
 
 
@@ -101,7 +102,7 @@ class async_db:
 
 
     async def async_update_data(self, instance: object,
-                    and__ = None, exp = None, **kwargs):
+                    and__ = None, exp = None, to_dict: bool = False, **kwargs):
         if self._check_obj_instance(instance):
             if and__:
                 query = update(instance).where(and_(*and__)).values(**kwargs)
@@ -115,7 +116,7 @@ class async_db:
                 await transaction.commit()
 
             logger.info(f"update {kwargs.keys()} in {instance}")
-            return await self.async_get_where(instance, and__, exp, all_=False)
+            return await self.async_get_where(instance, and__, exp, all_=False, to_dict=to_dict)
 
         else:
             self.err(instance)

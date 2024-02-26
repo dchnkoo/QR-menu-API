@@ -1,23 +1,21 @@
+from ......database.tables import (restaurant, categories, dishes, ingredients)
 from ......framework import app, jwt_validation, logger, db, t
+from .....ResponseModels.Category import GetCategories
+from .....tags import CATEGORY
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
-from .....ResponseModels.Category import GetCategories
-from .....ResponseModels.Register import RegisterResponseFail
 
-from ......database.tables import (restaurant, categories, dishes,
-                                 ingredients)
-from .....tags import CATEGORY
 
 
 @app.get('/api/admin/get/categories', tags=[CATEGORY])
-async def get_categories(hashf: str = Depends(jwt_validation)) -> (GetCategories | RegisterResponseFail):
+async def get_categories(hashf: str = Depends(jwt_validation)) -> GetCategories:
     try: 
         restaurant_id = await db.async_get_where(restaurant.c.id, exp=restaurant.c.hashf == hashf, 
-                                    all_=False)
-        restaurant_id = restaurant_id[0]
+                                    all_=False, to_dict=True)
+        restaurant_id = restaurant_id.get("id")
     except Exception as e:
         logger.error(f"Помилка під час отримання restaurant_id\n\nhashf: {hashf}\n\nError: {e}")
         raise HTTPException(status_code=500, detail='Невідома помилка під час обробки транзакції')

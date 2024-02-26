@@ -4,14 +4,14 @@ import os
 
 from ...celery.object import celery
 from ....settings import (SENDER_EMAIL, SENDER_PASSWORD,
-                          SMTP_PORT, SMTP_SERVER, DEBUG, logger)
+                          SMTP_PORT, SMTP_SERVER, logger)
 
 
 # Якщо DEBUG буде False тоді значення будуть братись з середовища докер контейнеру
-EMAIL = SENDER_EMAIL if DEBUG else os.environ.get("SENDER_EMAIL") if "SENDER_EMAIL" in os.environ.keys() else None 
-PASS = SENDER_PASSWORD if DEBUG else os.environ.get("SENDER_PASSWORD") if "SENDER_PASSWORD" in os.environ.keys() else None 
-PORT = SMTP_PORT if DEBUG else os.environ.get("SMTP_PORT") if "SMTP_PORT" in os.environ.keys() else None 
-SERVER = SMTP_SERVER if DEBUG else os.environ.get("SMTP_SERVER") if "SMTP_SERVER" in os.environ.keys() else None 
+EMAIL = os.environ.get("SENDER_EMAIL", SENDER_EMAIL) 
+PASS = os.environ.get("SENDER_PASSWORD", SENDER_PASSWORD) 
+PORT = os.environ.get("SMTP_PORT", SMTP_PORT) 
+SERVER = os.environ.get("SMTP_SERVER", SMTP_SERVER) 
 
 def setup_message(*args):
     """Створення повідомлення для відправки"""

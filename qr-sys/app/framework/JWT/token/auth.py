@@ -4,10 +4,10 @@ import jwt
 
 from ...redis import get_redis_connection
 from ....settings import REDIS_DB, logger
-import datetime
+import datetime, os
 
 
-SECRET_KEY = get_redis_connection(REDIS_DB + 2).get("SECRET_KEY")
+SECRET_KEY = get_redis_connection(int(os.environ.get("REDIS_DB", REDIS_DB)) + 2).get("SECRET_KEY")
 
 
 class JWT(JWTMetaData):

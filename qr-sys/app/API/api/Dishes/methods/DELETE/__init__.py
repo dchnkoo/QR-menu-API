@@ -1,13 +1,11 @@
+from .....ResponseModels.Register import RegisterResponseFail
 from ......framework import app, jwt_validation, db, logger
+from ......database.tables import dishes
+from .....tags import DISHES
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
-
-from .....ResponseModels.Register import RegisterResponseFail
-
-from ......database.tables import dishes
-from .....tags import DISHES
 
 
 @app.delete('/api/admin/delete/dish', tags=[DISHES], dependencies=[Depends(jwt_validation)])

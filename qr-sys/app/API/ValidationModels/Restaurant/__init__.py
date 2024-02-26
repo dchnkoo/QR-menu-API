@@ -33,3 +33,10 @@ class RestaurantRegister(RestaurantLogo):
 class RestaurantUpdate(RestaurantRegister):
     name: Optional[str] = None
    
+class RestaurantDataDelete(BaseModel):
+    start_day: bool = False
+    end_day: bool = False
+    start_time: bool = False
+    end_time: bool = False
+    logo: bool = False
+

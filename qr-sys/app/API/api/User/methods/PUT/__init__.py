@@ -25,4 +25,4 @@ async def recovery_password(data: RecoveryPassword) -> RegisterResponseFail:
         logger.error(f"Помилка під час зміни паролю користувача.\n\nId: {user_id}\nError: {e}")
         raise HTTPException(status_code=500, detail="Невідома помилка під час обробки транзакції")
     
-    return JSONResponse(status_code=200, content={"msg": f"Пароль для користувача змінено"})
+    return JSONResponse(status_code=200, content={"msg": "Пароль для користувача змінено"})

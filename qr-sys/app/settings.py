@@ -48,7 +48,7 @@ app = FastAPI(
 
 # CORS
 
-origins = list(json.loads(os.environ.get("CORS_ORIGINS_API"))) if "CORS_ORIGINS_API" in os.environ.keys() else ["*"]
+origins = list(json.loads(os.environ.get("CORS_ORIGINS_API", '["*"]')))
 
 app.add_middleware(
     CORSMiddleware,

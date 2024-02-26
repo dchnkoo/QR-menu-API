@@ -51,6 +51,13 @@ async def test_restaurant_delete_fail(client: httpx.AsyncClient):
     assert status == 401 and ("detail" in data) is True
 
 @pytest.mark.asyncio
+async def test_restaurant_data_delete_fail(client: httpx.AsyncClient):
+    request = await client.patch("/api/admin/delete/data")
+
+    assert request.status_code == 401 
+
+
+@pytest.mark.asyncio
 async def test_register_restaurant(client: httpx.AsyncClient, setup_user: str):
     status, data = await register_restaurant(client, get_restaurant(), setup_user)
 
@@ -67,6 +74,7 @@ async def test_restaurant_update(client: httpx.AsyncClient, setup_user: str):
     update = request.json()
     assert request.status_code == 200 and RestaurantResponseSucces(**update)
 
+
 @pytest.mark.asyncio
 async def test_restaurant_get(client: httpx.AsyncClient, setup_user: str):
     cookie = {"token": setup_user}
@@ -74,6 +82,18 @@ async def test_restaurant_get(client: httpx.AsyncClient, setup_user: str):
     request = await client.get('/api/admin/get/restaurant', cookies=cookie)
 
     assert request.status_code == 200 and RestaurantResponseSucces(**request.json())
+
+
+@pytest.mark.asyncio
+async def test_restaurant_data_delete(client: httpx.AsyncClient, setup_user: str):
+    cookie = {"token": setup_user}
+
+    request = await client.patch("/api/admin/delete/data", cookies=cookie,
+                                 json={"start_day": True})
+
+    data = request.json()
+    assert request.status_code == 200 and RestaurantResponseSucces(**data)
+
 
 @pytest.mark.asyncio
 async def test_restaurant_delete(client: httpx.AsyncClient, setup_user: str):
