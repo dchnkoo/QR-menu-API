@@ -1,5 +1,5 @@
 from .....ValidationModels.Ingredients import IngredientScheme
-from ......framework import app, jwt_validation, db, logger
+from ......framework import app, jwt, db, logger
 from ......database.tables import (restaurant, ingredients)
 from .....ResponseModels.Ingredients import Ingredient
 from .....tags import INGREDIENTS
@@ -10,7 +10,7 @@ from fastapi import Depends
 
 
 @app.post('/api/admin/add/ingredient', tags=[INGREDIENTS])
-async def add_ingredient(data: IngredientScheme, hashf: str = Depends(jwt_validation)) -> Ingredient:
+async def add_ingredient(data: IngredientScheme, hashf: str = Depends(jwt)) -> Ingredient:
     dish_id = data.dish_id
 
     # отримуємо id ресторану

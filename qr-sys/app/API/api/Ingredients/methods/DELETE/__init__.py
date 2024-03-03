@@ -1,5 +1,5 @@
 from .....ResponseModels.Register import RegisterResponseFail
-from ......framework import app, jwt_validation, db, logger
+from ......framework import app, jwt, db, logger
 from ......database.tables import ingredients
 from .....tags import INGREDIENTS
 
@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from fastapi import Depends
 
 
-@app.delete("/api/admin/delete/ingredients", tags=[INGREDIENTS], dependencies=[Depends(jwt_validation)])
+@app.delete("/api/admin/delete/ingredients", tags=[INGREDIENTS], dependencies=[Depends(jwt)])
 async def delete_ingredients(ingredient_id: int, dish_id: int) -> RegisterResponseFail:
     try: await db.async_delete_data(ingredients, and__=(ingredients.c.id == ingredient_id,
                                                         ingredients.c.dish_id == dish_id))

@@ -1,16 +1,20 @@
 from jwt.exceptions import InvalidTokenError, ExpiredSignatureError
 from ..MetaData.jwt_metadata import JWTMetaData 
+from fastapi import Request, HTTPException
 import jwt
 
+from ....settings import REDIS_DB, logger, COOKIE_KEY
 from ...redis import get_redis_connection
-from ....settings import REDIS_DB, logger
 import datetime, os
 
 
 SECRET_KEY = get_redis_connection(int(os.environ.get("REDIS_DB", REDIS_DB)) + 2).get("SECRET_KEY")
 
 
-class JWT(JWTMetaData):
+class JWT:
+
+    def __init__(self) -> None:
+        self.object = JWTMetaData()
 
     def get_playload(self, id: int, udata: str, **exp_time):
         """
@@ -18,7 +22,7 @@ class JWT(JWTMetaData):
         дату до котрої він буде дійсний в UTC форматі та кількість секунд
         до кінця його життя
         """
-        exp_utc = datetime.datetime.utcnow() + datetime.timedelta(**exp_time)
+        exp_utc: datetime.datetime = datetime.datetime.utcnow() + datetime.timedelta(**exp_time)
         return {
             'user_id': id,
             'username': udata,
@@ -55,3 +59,31 @@ class JWT(JWTMetaData):
         except Exception as e:
             logger.error(f"Відсутній токен\n\nError: {e}")
             return [False, 'Відсутній токен']
+        
+    # VALIDATION
+    def __call__(self, request: Request):     
+        try: token = request.cookies.get(COOKIE_KEY)
+        except Exception as e:
+            logger.error(f"Спроба взаємодії без дійсного JWT")
+            raise HTTPException(status_code=403, detail="Відсутній JWT token")
+
+        is_valid = self.check_token(token)
+
+        if is_valid[0] is False:
+       
+            try: logger.error(f"JWT {token[:10]} відсутній в JWTMetaData")
+            except Exception as e: logger.error(f"JWT відсутній в JWTMetaData\n\nError: {e}")
+
+            raise HTTPException(status_code=401, detail=is_valid[1])
+        
+        req_path = request.url.path
+        if request.method == "DELETE" and (req_path.endswith("delete/session/user") or req_path.endswith("delete/user")):
+            try: 
+                return self.object.pop(token)
+            except Exception as e:
+                logger.error(f"Помилка під час видалення токену {token[-10:]}\nError: {e}")
+                raise HTTPException(status_code=500, detail="Невідома помилка")
+            
+
+        try: return self.object.get(token)
+        except Exception: raise HTTPException(status_code=500, detail="Невідома помилка спробуйте знову згенерувати токен")

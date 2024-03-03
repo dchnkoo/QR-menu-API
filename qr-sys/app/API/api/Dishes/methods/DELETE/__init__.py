@@ -1,5 +1,5 @@
 from .....ResponseModels.Register import RegisterResponseFail
-from ......framework import app, jwt_validation, db, logger
+from ......framework import app, jwt, db, logger
 from ......database.tables import dishes
 from .....tags import DISHES
 
@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 from fastapi import Depends
 
 
-@app.delete('/api/admin/delete/dish', tags=[DISHES], dependencies=[Depends(jwt_validation)])
+@app.delete('/api/admin/delete/dish', tags=[DISHES], dependencies=[Depends(jwt)])
 async def delete_dish(dish_id: int, category_id: int) -> RegisterResponseFail:
     dish, category = dish_id, category_id
 

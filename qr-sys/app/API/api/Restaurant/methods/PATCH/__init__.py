@@ -1,4 +1,4 @@
-from ......framework import app, jwt_validation, t, db, logger
+from ......framework import app, jwt, t, db, logger
 from ......database.tables import restaurant
 
 from fastapi.exceptions import HTTPException
@@ -12,7 +12,7 @@ from .....tags import RESTAURANT
 
 
 @app.patch('/api/admin/update/restaurant', tags=[RESTAURANT])
-async def restaurant_data_update(data: RestaurantUpdate, hashf: str = Depends(jwt_validation)) -> RestaurantResponseSucces:
+async def restaurant_data_update(data: RestaurantUpdate, hashf: str = Depends(jwt)) -> RestaurantResponseSucces:
 
     try: new_data = await db.async_update_data(restaurant, exp=restaurant.c.hashf == hashf, 
                                 **t.parse_user_data(data.model_dump()), to_dict=True)
@@ -26,7 +26,7 @@ async def restaurant_data_update(data: RestaurantUpdate, hashf: str = Depends(jw
     return JSONResponse(status_code=200, content={'restaurant_data': t.parse_user_data(new_data)})
 
 @app.patch("/api/admin/delete/data", tags=[RESTAURANT])
-async def delete_restaurant_data(data: RestaurantDataDelete, hashf: str = Depends(jwt_validation)) -> RestaurantResponseSucces:
+async def delete_restaurant_data(data: RestaurantDataDelete, hashf: str = Depends(jwt)) -> RestaurantResponseSucces:
     
     """
     <h1>Якщо ключ має значення true тоді це поле буде видаленно з БД</h1>

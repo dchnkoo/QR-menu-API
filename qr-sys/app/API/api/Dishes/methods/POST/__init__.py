@@ -1,6 +1,5 @@
-from .....ResponseModels.Register import RegisterResponseFail
-from ......framework import app, jwt_validation, db, logger
 from ......database.tables import dishes, restaurant
+from ......framework import app, jwt, db, logger
 from .....ValidationModels.Dishes import Dish
 from .....tags import DISHES
 
@@ -10,7 +9,7 @@ from fastapi import Depends
 
 
 @app.post('/api/admin/add/dish', tags=[DISHES])
-async def add_dish(data: Dish, hashf: str = Depends(jwt_validation)) -> Dish:
+async def add_dish(data: Dish, hashf: str = Depends(jwt)) -> Dish:
 
     insert_data = data.model_dump()
 

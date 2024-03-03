@@ -1,6 +1,6 @@
-from ......framework import jwt_validation, app, db, t, logger
-from fastapi.responses import JSONResponse
+from ......framework import jwt, app, db, t, logger
 from fastapi.exceptions import HTTPException
+from fastapi.responses import JSONResponse
 
 from ......database.tables import (authefication, restaurant, 
                                    tables, categories)
@@ -12,7 +12,7 @@ from .....tags import USER
 
 
 @app.get("/api/admin/login/token", tags=[USER])
-async def login_by_token(hashf: str = Depends(jwt_validation)) -> SuccesLogin:
+async def login_by_token(hashf: str = Depends(jwt)) -> SuccesLogin:
 
     """
     <h1>Логування в систему за допомогою JWT токену</h1>
@@ -31,7 +31,7 @@ async def login_by_token(hashf: str = Depends(jwt_validation)) -> SuccesLogin:
 
 
 @app.get("/api/admin/get-full-info/user", tags=[USER])
-async def get_full_info_from_user(hashf: str = Depends(jwt_validation)):
+async def get_full_info_from_user(hashf: str = Depends(jwt)):
     """
     <h1>Метод для отримання повної інформації про користувача</h1>
     <p>Метод повертає інформацію про аккаунт користувача, заклад, кількість столів та категорії.</p>

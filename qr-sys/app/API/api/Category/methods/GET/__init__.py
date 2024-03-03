@@ -1,6 +1,6 @@
 from ......database.tables import (restaurant, categories, dishes, ingredients)
-from ......framework import app, jwt_validation, logger, db, t
 from .....ResponseModels.Category import GetCategories
+from ......framework import app, jwt, logger, db, t
 from .....tags import CATEGORY
 
 from fastapi.exceptions import HTTPException
@@ -11,7 +11,7 @@ from fastapi import Depends
 
 
 @app.get('/api/admin/get/categories', tags=[CATEGORY])
-async def get_categories(hashf: str = Depends(jwt_validation)) -> GetCategories:
+async def get_categories(hashf: str = Depends(jwt)) -> GetCategories:
     try: 
         restaurant_id = await db.async_get_where(restaurant.c.id, exp=restaurant.c.hashf == hashf, 
                                     all_=False, to_dict=True)
@@ -31,7 +31,7 @@ async def get_categories(hashf: str = Depends(jwt_validation)) -> GetCategories:
 
 
 @app.get("/api/admin/get-full-info/categories", tags=[CATEGORY])
-async def get_full_info_categories(hashf: str = Depends(jwt_validation)):
+async def get_full_info_categories(hashf: str = Depends(jwt)):
     
     restaurant_ = await db.async_get_where(restaurant, exp=restaurant.c.hashf == hashf,
                                            all_=False, to_dict=True)

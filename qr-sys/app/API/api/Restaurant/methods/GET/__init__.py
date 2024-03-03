@@ -1,4 +1,4 @@
-from ......framework import app, jwt_validation, db, logger, t
+from ......framework import app, jwt, db, logger, t
 from ......database.tables import restaurant
 
 from fastapi.exceptions import HTTPException
@@ -6,13 +6,11 @@ from fastapi.responses import JSONResponse
 from fastapi import Depends
 
 from .....ResponseModels.Restaurant import RestaurantResponseSucces
-from .....ResponseModels.Register import RegisterResponseFail
-
 from .....tags import RESTAURANT
 
 
 @app.get('/api/admin/get/restaurant', tags=[RESTAURANT])
-async def get_restaurant(hashf: str = Depends(jwt_validation)) -> RestaurantResponseSucces:
+async def get_restaurant(hashf: str = Depends(jwt)) -> RestaurantResponseSucces:
 
     try: restaurant_data = await db.async_get_where(restaurant, exp=restaurant.c.hashf == hashf,
                                         all_=False, to_dict=True)

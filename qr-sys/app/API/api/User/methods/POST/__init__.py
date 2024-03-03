@@ -1,7 +1,7 @@
 from ......framework import app, db, t, jwt, recovery, send_mail, logger
 
-from fastapi.responses import JSONResponse
 from fastapi.exceptions import HTTPException
+from fastapi.responses import JSONResponse
 
 from .....ValidationModels.Recovery import RecoverySetCode, Recovery
 from .....ResponseModels.Register import RegisterResponseFail
@@ -10,6 +10,7 @@ from .....ValidationModels.Register import RegisterUser
 from .....ValidationModels.Login import LoginByLP
 
 from ......database.tables import (authefication)
+from ......settings import COOKIE_KEY
 from .....tags import USER, EMAIL
 
 
@@ -31,10 +32,10 @@ async def register(data: RegisterUser) -> (RegisterResponseFail):
 
     playload, date, seconds = jwt.get_playload(user[0], user[2], **{time['type']: time['number']})
     token = jwt.get_token(**playload)
-    jwt.set(token, user[1], seconds)
+    jwt.object.set(token, user[1], seconds)
 
     response = JSONResponse(status_code=200, content={"msg": "Користувача зарєстровано"})
-    response.set_cookie(key="token", value=token, expires=date, httponly=True, secure=True, samesite="none")
+    response.set_cookie(key=COOKIE_KEY, value=token, expires=date, httponly=True, secure=True, samesite="none")
     return response
 
 
@@ -53,10 +54,10 @@ async def login(data: LoginByLP) -> RegisterResponseFail:
     # Генеруємо новий токен, зберігаємо та повертаємо дані
     playload, date, seconds = jwt.get_playload(user.get("id"), user.get("email"), **{time_type: time})
     token = jwt.get_token(**playload)
-    jwt.set(token, user.get("hashf"), seconds)
+    jwt.object.set(token, user.get("hashf"), seconds)
 
     response = JSONResponse(status_code=200, content={"msg": "Вхід в систему успішний"})
-    response.set_cookie(key="token", value=token, expires=date, httponly=True, secure=True, samesite="none")
+    response.set_cookie(key=COOKIE_KEY, value=token, expires=date, httponly=True, secure=True, samesite="none")
 
     return response
     

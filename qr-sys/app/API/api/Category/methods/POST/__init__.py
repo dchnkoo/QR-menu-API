@@ -1,4 +1,4 @@
-from ......framework import app, jwt_validation, logger, db
+from ......framework import app, jwt, logger, db
 from ......database.tables import (restaurant, categories)
 from .....ValidationModels.Category import CategorySet
 from .....ResponseModels.Category import CategoryTable
@@ -10,7 +10,7 @@ from fastapi import Depends
 
 
 @app.post('/api/admin/add/category', tags=[CATEGORY])
-async def add_category(data: CategorySet, hashf: str = Depends(jwt_validation)) -> CategoryTable:
+async def add_category(data: CategorySet, hashf: str = Depends(jwt)) -> CategoryTable:
     try: 
         restaurant_id = await db.async_get_where(restaurant.c.id, exp=restaurant.c.hashf == hashf, 
                                     all_=False, to_dict=True)

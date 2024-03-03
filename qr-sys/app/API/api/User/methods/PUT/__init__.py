@@ -1,9 +1,8 @@
-from ......framework import app, db, t, logger
-from fastapi.responses import JSONResponse
-from fastapi.exceptions import HTTPException
-
-from .....ValidationModels.Recovery import RecoveryPassword
 from .....ResponseModels.Register import RegisterResponseFail
+from .....ValidationModels.Recovery import RecoveryPassword
+from ......framework import app, db, t, logger
+from fastapi.exceptions import HTTPException
+from fastapi.responses import JSONResponse
 
 from ......database.tables import authefication
 from .....tags import USER

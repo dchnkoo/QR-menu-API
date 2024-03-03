@@ -38,9 +38,7 @@ class JWTMetaData(dict):
         """
         Видаляє ключ з БД та повертає його значення
         """
-        value = self.__getitem__(key)
-        self.__delitem__(key)
-        return value
+        return re.getdel(key)
 
     def get(self, key: Any) -> Any:
         return self.__getitem__(key)

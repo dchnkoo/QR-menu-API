@@ -1,4 +1,4 @@
-from ......framework import app, jwt_validation, logger, db
+from ......framework import app, jwt, logger, db
 from ......database.tables import restaurant
 
 from fastapi.exceptions import HTTPException
@@ -10,7 +10,7 @@ from .....tags import RESTAURANT
 
 
 @app.delete('/api/admin/delete/restaurant', tags=[RESTAURANT])
-async def restaurant_delete(hashf: str = Depends(jwt_validation)) -> RegisterResponseFail:
+async def restaurant_delete(hashf: str = Depends(jwt)) -> RegisterResponseFail:
     
     try: await db.async_delete_data(restaurant, exp=restaurant.c.hashf == hashf)
     except Exception as e:

@@ -10,10 +10,6 @@ t = trash()
 # Обьєкт керування токенами
 from .JWT import jwt
 
-# Обьєкт який валідаціє токени
-from .JWT.validation import JWTValidation
-jwt_validation = JWTValidation()
-
 
 # Логер та сам додаток 
 from ..settings import logger, app

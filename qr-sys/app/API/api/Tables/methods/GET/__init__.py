@@ -1,4 +1,4 @@
-from ......framework import app, jwt_validation, logger, db, qr
+from ......framework import app, jwt, logger, db, qr
 from .....ResponseModels.Tables import GetTablesResponse
 from ......database.tables import restaurant
 from .....tags import TABLES
@@ -8,7 +8,7 @@ from fastapi import Depends
 
 
 @app.get('/api/admin/get/tables', tags=[TABLES])
-async def get_tables(page: int = 1, hashf: str = Depends(jwt_validation)) -> GetTablesResponse:
+async def get_tables(page: int = 1, hashf: str = Depends(jwt)) -> GetTablesResponse:
     try: 
         restaurant_id = await db.async_get_where(restaurant.c.id, exp=restaurant.c.hashf == hashf,
                                     all_=False)

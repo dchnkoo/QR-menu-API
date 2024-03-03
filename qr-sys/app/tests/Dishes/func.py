@@ -1,3 +1,4 @@
+from ...settings import COOKIE_KEY
 
 def get_dishes(category_id: int) -> list[dict]:
     dishes = [{
@@ -19,14 +20,14 @@ def get_dishes(category_id: int) -> list[dict]:
     return dishes
 
 async def add_dish(client, token: str, dish: dict):
-    cookie = {"token": token}
+    cookie = {COOKIE_KEY: token}
 
     request = await client.post("/api/admin/add/dish", cookies=cookie, json=dish)
 
     return request.status_code, request.json()
 
 async def delete_dish(client, token: str, **kwargs):
-    cookie = {"token": token}
+    cookie = {COOKIE_KEY: token}
 
     args = "".join([f"{k}={v}&" for k, v in kwargs.items()])[:-1]
 

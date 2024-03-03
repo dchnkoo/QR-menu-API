@@ -11,8 +11,9 @@ from ..Category.func import add_category, delete_category
 
 from .func import get_dishes, add_dish, delete_dish
 
-import httpx
+from ...settings import COOKIE_KEY
 import pytest, pytest_asyncio
+import httpx
 
 
 @pytest_asyncio.fixture(scope="module", params=users)
@@ -98,7 +99,7 @@ async def test_add_dish(client: httpx.AsyncClient, setup_categories: tuple[str, 
 async def test_get_dish(client: httpx.AsyncClient, setup_categories: tuple[str, list[dict]]):
     token, data = setup_categories
 
-    cookie = {"token": token}
+    cookie = {COOKIE_KEY: token}
 
     for i in data:
         request = await client.get(f"/api/admin/get/dish?category_id={i.get('id')}",

@@ -6,7 +6,7 @@ from .func import (get_restaurant, get_restaurant_update,
 from ..User.func import registration, delete_user
 from ..User import users
 
-
+from ...settings import COOKIE_KEY
 import pytest, pytest_asyncio
 import httpx
 
@@ -66,7 +66,7 @@ async def test_register_restaurant(client: httpx.AsyncClient, setup_user: str):
 
 @pytest.mark.asyncio
 async def test_restaurant_update(client: httpx.AsyncClient, setup_user: str):
-    cookie = {"token": setup_user}
+    cookie = {COOKIE_KEY: setup_user}
     
     request = await client.patch('/api/admin/update/restaurant',
                           cookies=cookie, json=get_restaurant_update())
@@ -77,7 +77,7 @@ async def test_restaurant_update(client: httpx.AsyncClient, setup_user: str):
 
 @pytest.mark.asyncio
 async def test_restaurant_get(client: httpx.AsyncClient, setup_user: str):
-    cookie = {"token": setup_user}
+    cookie = {COOKIE_KEY: setup_user}
 
     request = await client.get('/api/admin/get/restaurant', cookies=cookie)
 
@@ -86,7 +86,7 @@ async def test_restaurant_get(client: httpx.AsyncClient, setup_user: str):
 
 @pytest.mark.asyncio
 async def test_restaurant_data_delete(client: httpx.AsyncClient, setup_user: str):
-    cookie = {"token": setup_user}
+    cookie = {COOKIE_KEY: setup_user}
 
     request = await client.patch("/api/admin/delete/data", cookies=cookie,
                                  json={"start_day": True})

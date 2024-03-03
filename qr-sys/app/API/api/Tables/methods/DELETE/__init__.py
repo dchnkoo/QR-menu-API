@@ -1,17 +1,17 @@
-from ......framework import app, jwt_validation, db, qr, logger
+from ......framework import app, jwt, db, qr, logger
 from ......database.tables import restaurant
 
 from fastapi.exceptions import HTTPException
 from fastapi.responses import JSONResponse
 from fastapi import Depends
 
-from .....ValidationModels.Tables import DeleteType
 from .....ResponseModels.Register import RegisterResponseFail
+from .....ValidationModels.Tables import DeleteType
 from .....tags import TABLES
 
 
 @app.delete('/api/admin/delete/tables', tags=[TABLES])
-async def delete_tables(type: DeleteType, table_number: int = 0, hashf: str = Depends(jwt_validation)) -> RegisterResponseFail:
+async def delete_tables(type: DeleteType, table_number: int = 0, hashf: str = Depends(jwt)) -> RegisterResponseFail:
 
     """
     

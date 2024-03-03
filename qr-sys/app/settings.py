@@ -8,6 +8,10 @@ BASE_DIR = Path(__file__).parent.parent
 # for production set DEBUG = False
 DEBUG = False
 
+# COOKIE
+COOKIE_KEY = "QR_MENU_TOKEN"
+
+
 # DATABASE
 DATABASE="postgresql+asyncpg://test:test@localhost:5435/test"
 DATABASE_SYNC="postgresql://test:test@localhost:5435/test"
