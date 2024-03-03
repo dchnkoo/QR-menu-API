@@ -16,6 +16,12 @@ class JWT:
     def __init__(self) -> None:
         self.object = JWTMetaData()
 
+    @staticmethod
+    def cookie_params(token, date: datetime.datetime):
+        return {"key": COOKIE_KEY, "value": token, "expires": date,
+                                     "secure": True, "samesite": "none", "path": '/'}
+
+
     def get_playload(self, id: int, udata: str, **exp_time):
         """
         Створення обьєкту для генерування токену, також повертає 

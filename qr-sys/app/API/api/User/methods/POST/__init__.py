@@ -10,8 +10,8 @@ from .....ValidationModels.Register import RegisterUser
 from .....ValidationModels.Login import LoginByLP
 
 from ......database.tables import (authefication)
-from ......settings import COOKIE_KEY
 from .....tags import USER, EMAIL
+
 
 
 @app.post('/api/admin/register', tags=[USER])
@@ -35,7 +35,7 @@ async def register(data: RegisterUser) -> (RegisterResponseFail):
     jwt.object.set(token, user[1], seconds)
 
     response = JSONResponse(status_code=200, content={"msg": "Користувача зарєстровано"})
-    response.set_cookie(key=COOKIE_KEY, value=token, expires=date, httponly=True, secure=True, samesite="none")
+    response.set_cookie(**jwt.cookie_params(token, date))
     return response
 
 
@@ -57,7 +57,7 @@ async def login(data: LoginByLP) -> RegisterResponseFail:
     jwt.object.set(token, user.get("hashf"), seconds)
 
     response = JSONResponse(status_code=200, content={"msg": "Вхід в систему успішний"})
-    response.set_cookie(key=COOKIE_KEY, value=token, expires=date, httponly=True, secure=True, samesite="none")
+    response.set_cookie(**jwt.cookie_params(token, date))
 
     return response
     
